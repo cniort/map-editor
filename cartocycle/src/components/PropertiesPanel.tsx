@@ -14,6 +14,7 @@ import type { RouteStyle, MarkerShape, CityConfig, CityCategory, TextAnnotation,
 import { LABEL_POSITIONS } from '@/utils/labelPosition'
 import { Settings2, Search, Download, Save, FileUp } from 'lucide-react'
 import { BUILT_IN_PRESETS, getCustomPresets } from '@/utils/presets'
+import { useUiStore } from '@/stores/uiStore'
 import { useState, useRef, useCallback } from 'react'
 
 const DASH_PRESETS = [
@@ -108,11 +109,21 @@ function CanvasProperties() {
           <span className="text-xs text-muted-foreground">mm</span>
         </div>
         <div className="grid grid-cols-3 gap-1">
-          {[{ l: 'A4', w: 210, h: 297 }, { l: 'A3', w: 297, h: 420 }, { l: 'DL', w: 100, h: 210 }].map((p) => (
-            <Button key={p.l} variant={canvas.widthMm === p.w && canvas.heightMm === p.h ? 'default' : 'outline'} size="sm" className="h-6 text-[11px]" onClick={() => setCanvasSize(p.w, p.h)}>
-              {p.l}
-            </Button>
-          ))}
+          {[{ l: 'A4', w: 210, h: 297 }, { l: 'A3', w: 297, h: 420 }, { l: 'DL', w: 100, h: 210 }].map((p) => {
+            const isActive = canvas.widthMm === p.w && canvas.heightMm === p.h
+            return (
+              <Button key={p.l} variant={isActive ? 'default' : 'outline'} size="sm" className="h-6 text-[11px]" onClick={() => {
+                if (isActive) {
+                  useUiStore.getState().toggleFormatOverlay()
+                } else {
+                  setCanvasSize(p.w, p.h)
+                  if (!useUiStore.getState().showFormatOverlay) useUiStore.getState().toggleFormatOverlay()
+                }
+              }}>
+                {p.l}
+              </Button>
+            )
+          })}
         </div>
       </PropertyGroup>
 

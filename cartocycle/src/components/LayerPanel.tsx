@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef } from 'react'
+import { useCallback, useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { useMapStore, type SelectionType } from '@/stores/mapStore'
 import { gpx } from '@tmcw/togeojson'
@@ -19,6 +19,7 @@ import {
   ChevronRight,
   Search,
   Trash2,
+  ChevronsDownUp,
 } from 'lucide-react'
 
 interface LayerItemProps {
@@ -36,15 +37,19 @@ interface LayerItemProps {
   children?: React.ReactNode
 }
 
-function LayerItem({ label, icon: Icon, visible, onToggleVisibility, onDelete, deleteLabel, selected, onSelect, indent = 0, children }: LayerItemProps) {
+function LayerItem({ label, icon: Icon, visible, onToggleVisibility, onDelete, deleteLabel, selected, onSelect, indent = 0, children, collapseSignal }: LayerItemProps & { collapseSignal?: number }) {
   const [expanded, setExpanded] = useState(true)
+
+  useEffect(() => {
+    if (collapseSignal && collapseSignal > 0) setExpanded(false)
+  }, [collapseSignal])
   const [confirmDelete, setConfirmDelete] = useState(false)
   const hasChildren = !!children
 
   return (
     <div>
       <div
-        className={`group flex items-center gap-1.5 rounded px-2 py-1.5 cursor-pointer transition-colors ${
+        className={`group flex items-center gap-1.5 rounded pr-3 py-1.5 cursor-pointer transition-colors ${
           selected ? 'bg-primary/10 text-primary' : 'hover:bg-accent'
         }`}
         style={{ paddingLeft: `${10 + indent * 18}px` }}
@@ -64,20 +69,20 @@ function LayerItem({ label, icon: Icon, visible, onToggleVisibility, onDelete, d
         <span className="flex-1 truncate text-[13px]">{label}</span>
         {onToggleVisibility && (
           <button
-            className="h-6 w-6 shrink-0 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-muted hover:text-foreground transition-opacity"
             onClick={(e) => { e.stopPropagation(); onToggleVisibility() }}
             aria-label={visible ? 'Masquer' : 'Afficher'}
           >
-            {visible ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3 opacity-40" />}
+            {visible ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5 opacity-40" />}
           </button>
         )}
         {onDelete && !confirmDelete && (
           <button
-            className="h-6 w-6 shrink-0 rounded p-1 text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive transition-opacity"
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive transition-opacity"
             onClick={(e) => { e.stopPropagation(); setConfirmDelete(true) }}
             aria-label="Supprimer"
           >
-            <Trash2 className="h-3 w-3" />
+            <Trash2 className="h-3.5 w-3.5" />
           </button>
         )}
       </div>
@@ -111,10 +116,28 @@ export function LayerPanel() {
   const addRoute = useMapStore((s) => s.addRoute)
   const addAnnotation = useMapStore((s) => s.addAnnotation)
   const addCity = useMapStore((s) => s.addCity)
+  const updateCity = useMapStore((s) => s.updateCity)
   const removeAnnotation = useMapStore((s) => s.removeAnnotation)
   const removeCity = useMapStore((s) => s.removeCity)
   const removeRoute = useMapStore((s) => s.removeRoute)
   const loadState = useMapStore((s) => s.loadState)
+
+  // Visibility toggles for groups
+  const allCitiesVisible = cities.every((c) => c.visible)
+  const toggleAllCitiesVisibility = () => {
+    const newVisible = !allCitiesVisible
+    cities.forEach((c) => updateCity(c.id, { visible: newVisible }))
+  }
+  const toggleCategoryCitiesVisibility = (categoryId: string) => {
+    const catCities = cities.filter((c) => c.categoryId === categoryId)
+    const allVisible = catCities.every((c) => c.visible)
+    catCities.forEach((c) => updateCity(c.id, { visible: !allVisible }))
+  }
+  const allRoutesVisible = routes.every((r) => r.visible)
+  const toggleAllRoutesVisibility = () => {
+    const newVisible = !allRoutesVisible
+    routes.forEach((r) => updateRoute(r.id, { visible: newVisible }))
+  }
 
   const clearAllAnnotations = () => {
     const state = useMapStore.getState()
@@ -227,6 +250,9 @@ export function LayerPanel() {
     select(ann.id, 'annotation')
   }
 
+  const [collapseKey, setCollapseKey] = useState(0)
+  const collapseAll = () => setCollapseKey((k) => k + 1)
+
   const MIN_WIDTH = 240
   const DEFAULT_WIDTH = 300
   const [panelWidth, setPanelWidth] = useState(DEFAULT_WIDTH)
@@ -262,14 +288,22 @@ export function LayerPanel() {
       {/* Header */}
       <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
         <Layers className="h-4 w-4 text-primary" />
-        <span className="text-xs font-bold tracking-tight">CALQUES</span>
+        <span className="flex-1 text-xs font-bold tracking-tight">CALQUES</span>
+        <button
+          className="h-5 w-5 rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+          onClick={collapseAll}
+          title="Tout replier"
+          aria-label="Tout replier"
+        >
+          <ChevronsDownUp className="h-3.5 w-3.5" />
+        </button>
       </div>
 
       <div className="flex-1 overflow-y-auto">
         <div className="py-1">
           {/* Annotations */}
           <LayerItem
-            id="annotations-group"
+            id="annotations-group" collapseSignal={collapseKey}
             type="annotation"
             label={`Annotations (${annotations.length})`}
             icon={Type}
@@ -295,10 +329,12 @@ export function LayerPanel() {
 
           {/* Villes */}
           <LayerItem
-            id="cities-group"
+            id="cities-group" collapseSignal={collapseKey}
             type={null}
             label={`Villes (${cities.length})`}
             icon={MapPin}
+            visible={allCitiesVisible}
+            onToggleVisibility={cities.length > 0 ? toggleAllCitiesVisibility : undefined}
             selected={false}
             onSelect={() => {}}
             onDelete={cities.length > 0 ? clearAllCities : undefined}
@@ -314,6 +350,8 @@ export function LayerPanel() {
                   type="cityCategory"
                   label={`${cat.name} (${catCities.length})`}
                   icon={LayoutList}
+                  visible={catCities.every((c) => c.visible)}
+                  onToggleVisibility={() => toggleCategoryCitiesVisibility(cat.id)}
                   selected={isSelected(cat.id, 'cityCategory')}
                   onSelect={() => select(cat.id, 'cityCategory')}
                   onDelete={() => { catCities.forEach((c) => removeCity(c.id)) }}
@@ -328,6 +366,7 @@ export function LayerPanel() {
                       label={city.name}
                       icon={MapPin}
                       visible={city.visible}
+                      onToggleVisibility={() => updateCity(city.id, { visible: !city.visible })}
                       onDelete={() => removeCity(city.id)}
                       selected={isSelected(city.id, 'city')}
                       onSelect={() => select(city.id, 'city')}
@@ -341,10 +380,12 @@ export function LayerPanel() {
 
           {/* Itinéraires */}
           <LayerItem
-            id="routes-group"
+            id="routes-group" collapseSignal={collapseKey}
             type={null}
             label={`Itinéraires (${routes.length})`}
             icon={Route}
+            visible={allRoutesVisible}
+            onToggleVisibility={routes.length > 0 ? toggleAllRoutesVisibility : undefined}
             selected={false}
             onSelect={() => {}}
             onDelete={routes.length > 0 ? clearAllRoutes : undefined}
@@ -369,7 +410,7 @@ export function LayerPanel() {
 
           {/* Fond de carte */}
           <LayerItem
-            id="basemap-group"
+            id="basemap-group" collapseSignal={collapseKey}
             type={null}
             label="Fond de carte"
             icon={MapIcon}

@@ -1,6 +1,5 @@
 import { useRef, useEffect, useCallback } from 'react'
 import { select } from 'd3-selection'
-import 'd3-transition'
 import { zoom as d3Zoom, zoomIdentity, type D3ZoomEvent, type ZoomBehavior } from 'd3-zoom'
 import { geoPath } from 'd3-geo'
 import { useMapStore } from '@/stores/mapStore'
@@ -24,19 +23,19 @@ let svgSelectionRef: ReturnType<typeof select<SVGSVGElement, unknown>> | null = 
 
 export function zoomIn() {
   if (zoomBehaviorRef && svgSelectionRef) {
-    svgSelectionRef.transition().duration(300).call(zoomBehaviorRef.scaleBy, 1.5)
+    zoomBehaviorRef.scaleBy(svgSelectionRef, 1.5)
   }
 }
 
 export function zoomOut() {
   if (zoomBehaviorRef && svgSelectionRef) {
-    svgSelectionRef.transition().duration(300).call(zoomBehaviorRef.scaleBy, 1 / 1.5)
+    zoomBehaviorRef.scaleBy(svgSelectionRef, 1 / 1.5)
   }
 }
 
 export function zoomReset() {
   if (zoomBehaviorRef && svgSelectionRef) {
-    svgSelectionRef.transition().duration(300).call(zoomBehaviorRef.transform, zoomIdentity)
+    zoomBehaviorRef.transform(svgSelectionRef, zoomIdentity)
   }
 }
 

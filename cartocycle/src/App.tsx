@@ -7,12 +7,14 @@ import { FormatOverlay } from '@/components/FormatOverlay'
 import { ScaleBar } from '@/components/ScaleBar'
 import { useMapStore } from '@/stores/mapStore'
 import { useProjectStore } from '@/stores/projectStore'
+import { useUiStore } from '@/stores/uiStore'
 import { exportSvg } from '@/utils/export'
 
 function App() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 })
   const [fullscreen, setFullscreen] = useState(false)
+  const showFormatOverlay = useUiStore((s) => s.showFormatOverlay)
   const undo = useMapStore((s) => s.undo)
   const redo = useMapStore((s) => s.redo)
   const canvas = useMapStore((s) => s.canvas)
@@ -90,7 +92,7 @@ function App() {
           {canvasSize.width > 0 && canvasSize.height > 0 && (
             <>
               <MapCanvas width={canvasSize.width} height={canvasSize.height} />
-              <FormatOverlay canvasWidth={canvasSize.width} canvasHeight={canvasSize.height} />
+              {showFormatOverlay && <FormatOverlay canvasWidth={canvasSize.width} canvasHeight={canvasSize.height} />}
               <ScaleBar canvasWidth={canvasSize.width} canvasHeight={canvasSize.height} />
             </>
           )}
