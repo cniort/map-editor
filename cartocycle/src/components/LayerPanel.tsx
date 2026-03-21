@@ -69,7 +69,7 @@ function LayerItem({ label, icon: Icon, visible, onToggleVisibility, onDelete, d
         <span className="flex-1 truncate text-xs">{label}</span>
         {onToggleVisibility && (
           <button
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-muted hover:text-foreground transition-opacity"
+            className={`flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground transition-opacity ${visible ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}
             onClick={(e) => { e.stopPropagation(); onToggleVisibility() }}
             aria-label={visible ? 'Masquer' : 'Afficher'}
           >
