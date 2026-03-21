@@ -356,10 +356,15 @@ function CityProperties({ cityId }: { cityId: string }) {
   const city = useMapStore((s) => s.cities.find((c) => c.id === cityId))
   const cityCategories = useMapStore((s) => s.cityCategories)
   const updateCity = useMapStore((s) => s.updateCity)
+  const updateCityCategory = useMapStore((s) => s.updateCityCategory)
   const removeCity = useMapStore((s) => s.removeCity)
   const clearSelection = useMapStore((s) => s.clearSelection)
 
   if (!city) return null
+
+  const category = cityCategories.find((c) => c.id === city.categoryId)
+  const defaultOffset = category?.labelStyle.offset || { x: 6, y: 0 }
+  const currentDistance = Math.round(Math.sqrt(defaultOffset.x * defaultOffset.x + defaultOffset.y * defaultOffset.y))
 
   return (
     <div className="space-y-4">
@@ -399,6 +404,49 @@ function CityProperties({ cityId }: { cityId: string }) {
             )
           })}
         </div>
+        <SliderControl
+          label="Distance"
+          value={currentDistance}
+          min={2}
+          max={30}
+          step={1}
+          onChange={(v) => {
+            // Update the category offset distance (affects all cities of this category)
+            if (category) {
+              const ratio = v / Math.max(currentDistance, 1)
+              updateCityCategory(city.categoryId, {
+                labelStyle: {
+                  ...category.labelStyle,
+                  offset: {
+                    x: Math.round(defaultOffset.x * ratio),
+                    y: Math.round(defaultOffset.y * ratio),
+                  },
+                },
+              })
+            }
+          }}
+          suffix="px"
+        />
+      </PropertyGroup>
+
+      <Separator />
+
+      <PropertyGroup title="Marqueur">
+        <SliderControl
+          label="Contour"
+          value={category?.markerStyle.strokeWidth ?? 1}
+          min={0}
+          max={4}
+          step={0.5}
+          onChange={(v) => {
+            if (category) {
+              updateCityCategory(city.categoryId, {
+                markerStyle: { ...category.markerStyle, strokeWidth: v },
+              })
+            }
+          }}
+          suffix="px"
+        />
       </PropertyGroup>
 
       <Separator />
