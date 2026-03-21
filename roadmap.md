@@ -72,6 +72,13 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 - [ ] Investigation : forcer un re-mount du SVG via une clé React, ou ré-initialiser le zoom behavior dans loadState
 - [ ] Lié au mélange D3 impératif / React déclaratif identifié par Rodin
 
+### UX PRIORITAIRE : Recherche de villes inaccessible
+
+- [ ] La recherche géocodée (Nominatim) est actuellement cachée dans les propriétés "Canvas" — il faut cliquer sur Canvas pour y accéder, ce qui n'est pas intuitif
+- [ ] Solution : déplacer la recherche de villes dans le panneau gauche (LayerPanel), sous la section "Villes", toujours visible
+- [ ] Ou ajouter un bouton "+ Ville" en bas du LayerPanel (comme "+ Itinéraire" et "+ Texte") qui ouvre un petit formulaire de recherche intégré
+- [ ] La recherche doit être accessible en permanence sans avoir à changer de contexte de sélection
+
 ---
 
 ## Phase 4 — Interactions directes et UX avancée [A FAIRE]
