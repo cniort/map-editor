@@ -17,25 +17,28 @@ interface MapCanvasProps {
   height: number
 }
 
-// Store zoom behavior ref globally so toolbar can access it
+// Store refs globally so toolbar can access them
 let zoomBehaviorRef: ZoomBehavior<SVGSVGElement, unknown> | null = null
-let svgSelectionRef: ReturnType<typeof select<SVGSVGElement, unknown>> | null = null
+let svgElementRef: SVGSVGElement | null = null
 
 export function zoomIn() {
-  if (zoomBehaviorRef && svgSelectionRef) {
-    zoomBehaviorRef.scaleBy(svgSelectionRef, 1.5)
+  if (zoomBehaviorRef && svgElementRef) {
+    const sel = select(svgElementRef)
+    zoomBehaviorRef.scaleBy(sel, 1.5)
   }
 }
 
 export function zoomOut() {
-  if (zoomBehaviorRef && svgSelectionRef) {
-    zoomBehaviorRef.scaleBy(svgSelectionRef, 1 / 1.5)
+  if (zoomBehaviorRef && svgElementRef) {
+    const sel = select(svgElementRef)
+    zoomBehaviorRef.scaleBy(sel, 1 / 1.5)
   }
 }
 
 export function zoomReset() {
-  if (zoomBehaviorRef && svgSelectionRef) {
-    zoomBehaviorRef.transform(svgSelectionRef, zoomIdentity)
+  if (zoomBehaviorRef && svgElementRef) {
+    const sel = select(svgElementRef)
+    zoomBehaviorRef.transform(sel, zoomIdentity)
   }
 }
 
@@ -69,7 +72,7 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
     const svg = select(svgRef.current)
     const g = select(gRef.current)
 
-    svgSelectionRef = svg
+    svgElementRef = svgRef.current
 
     const zoomBehavior = d3Zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.3, 50])
@@ -233,6 +236,8 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
   const selectedId = useMapStore((s) => s.selectedId)
   const selectElement = useMapStore((s) => s.select)
   const updateAnnotation = useMapStore((s) => s.updateAnnotation)
+  const eyedropperActive = useUiStore((s) => s.eyedropperActive)
+  const setPickedColor = useUiStore((s) => s.setPickedColor)
   const dragRef = useRef<{ id: string; startX: number; startY: number; origX: number; origY: number } | null>(null)
 
   const handleAnnotationMouseDown = useCallback((e: React.MouseEvent, ann: TextAnnotation) => {
@@ -350,14 +355,14 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
       viewBox={`0 0 ${width} ${height}`}
       style={{
         backgroundColor: canvas.backgroundColor,
-        cursor: useUiStore.getState().eyedropperActive ? 'crosshair' : canvas.locked ? 'default' : 'grab',
+        cursor: eyedropperActive ? 'crosshair' : canvas.locked ? 'default' : 'grab',
       }}
       onClick={(e) => {
-        if (useUiStore.getState().eyedropperActive) {
+        if (eyedropperActive) {
           const target = e.target as SVGElement
           const fill = target.getAttribute('fill') || target.style.fill
           if (fill && fill !== 'none') {
-            useUiStore.getState().setPickedColor(fill)
+            setPickedColor(fill)
             navigator.clipboard?.writeText(fill)
           }
           return
