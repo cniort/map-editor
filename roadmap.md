@@ -65,9 +65,18 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 
 ## Bugs résolus
 
-- [x] Zoom/pan après import → _stateVersion incrémenté dans loadState/addRoute, force ré-attachement D3-zoom
+- [x] Zoom/pan : refonte complète — useEffect créé une seule fois, dépend de `loading` pour s'attacher quand le SVG existe
+- [x] Cause racine zoom : le SVG n'existe pas au premier render (loading=true → retourne un div), le useEffect([]) ne se ré-exécutait jamais
+- [x] ColorPicker : button-in-button corrigé (causait erreur hydration React qui cassait les events)
 - [x] Recherche de villes → bouton "+ Ville" dans le LayerPanel avec recherche Nominatim intégrée
 - [x] Clic sur zone vide du canvas → sélectionne Canvas (affiche propriétés générales)
+- [x] Boutons format : se désélectionnent visuellement quand l'overlay est masqué
+- [x] Icône reset vue : changée en LocateFixed (évite confusion avec plein écran)
+- [x] Plein écran : panneaux glissent via margin négatif (animation fluide)
+- [x] Oeil calques : apparaît au hover avec frame bg-primary/10
+- [x] Poubelle calques : centrée dans sa frame, hover destructive/15
+- [x] Migration 12 select natifs → shadcn Select + 3 checkboxes → Switch
+- [x] Audit UI : harmonisation tailles texte, paddings, alignements
 
 ---
 
