@@ -52,7 +52,6 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
   const cities = useMapStore((s) => s.cities)
   const cityCategories = useMapStore((s) => s.cityCategories)
   const annotations = useMapStore((s) => s.annotations)
-  const stateVersion = useMapStore((s) => s._stateVersion)
   const { data, loading } = useGeoData()
 
   const projection = useProjection({
@@ -65,38 +64,56 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
 
   const path = geoPath(projection)
 
-  // Zoom & pan via SVG transform (instantaneous, no recalculation)
+  // Stable ref for zoom behavior (never recreated)
+  const zoomBehaviorLocalRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null)
+
+  // Effect 1: Create zoom behavior ONCE at mount
   useEffect(() => {
-    if (!svgRef.current || !gRef.current) return
+    const svg = svgRef.current
+    const g = gRef.current
+    if (!svg || !g) return
 
-    const svg = select(svgRef.current)
-    const g = select(gRef.current)
-
-    svgElementRef = svgRef.current
+    const svgSel = select(svg)
+    const gSel = select(g)
 
     const zoomBehavior = d3Zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.3, 50])
       .on('zoom', (event: D3ZoomEvent<SVGSVGElement, unknown>) => {
-        g.attr('transform', event.transform.toString())
+        gSel.attr('transform', event.transform.toString())
       })
 
+    zoomBehaviorLocalRef.current = zoomBehavior
     zoomBehaviorRef = zoomBehavior
+    svgElementRef = svg
 
-    // Always attach zoom behavior (required for programmatic zoom)
-    svg.call(zoomBehavior)
+    svgSel.call(zoomBehavior)
+
+    return () => {
+      svgSel.on('.zoom', null)
+      zoomBehaviorLocalRef.current = null
+      zoomBehaviorRef = null
+      svgElementRef = null
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Effect 2: Handle locked mode (only depends on canvas.locked)
+  useEffect(() => {
+    const svg = svgRef.current
+    const zb = zoomBehaviorLocalRef.current
+    if (!svg || !zb) return
+
+    const svgSel = select(svg)
 
     if (canvas.locked) {
-      // Disable mouse/touch interaction but keep programmatic zoom working
-      svg.on('mousedown.zoom', null)
+      svgSel
+        .on('mousedown.zoom', null)
         .on('touchstart.zoom', null)
         .on('dblclick.zoom', null)
         .on('wheel.zoom', null)
+    } else {
+      svgSel.call(zb)
     }
-
-    return () => {
-      svg.on('.zoom', null)
-    }
-  }, [canvas.locked, canvas.projection.type, canvas.projection.scale, stateVersion])
+  }, [canvas.locked])
 
   const renderLayer = useCallback(
     (fc: FeatureCollection | null, layerId: string) => {
