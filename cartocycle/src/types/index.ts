@@ -123,6 +123,8 @@ export interface LabelStyle {
   backgroundPadding?: number
 }
 
+export type LabelAnchorPosition = 'E' | 'NE' | 'N' | 'NO' | 'O' | 'SO' | 'S' | 'SE'
+
 export interface CityConfig {
   id: string
   name: string
@@ -132,6 +134,7 @@ export interface CityConfig {
   markerOverride?: Partial<MarkerStyle>
   labelOverride?: Partial<LabelStyle>
   labelPosition?: { x: number; y: number }
+  labelAnchorPosition?: LabelAnchorPosition
 }
 
 // === Annotations ===

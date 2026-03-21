@@ -10,6 +10,7 @@ import { RouteRenderer } from '@/components/RouteRenderer'
 import { smoothedPath } from '@/utils/smoothGeo'
 import type { FeatureCollection, Feature } from 'geojson'
 import type { ShapeStyle, MarkerStyle, TextAnnotation } from '@/types'
+import { getLabelOffset } from '@/utils/labelPosition'
 
 interface MapCanvasProps {
   width: number
@@ -167,8 +168,10 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
         if (!projected) return null
 
         const [x, y] = projected
-        const labelX = x + labelStyle.offset.x
-        const labelY = y + labelStyle.offset.y
+        const posOffset = getLabelOffset(city.labelAnchorPosition, labelStyle.offset)
+        const labelX = x + posOffset.x
+        const labelY = y + posOffset.y
+        const textAnchor = city.labelAnchorPosition ? posOffset.anchor : labelStyle.anchor
         const bgColor = labelStyle.backgroundColor
         const bgOpacity = labelStyle.backgroundOpacity ?? 0
         const bgPad = labelStyle.backgroundPadding ?? 2
@@ -208,7 +211,7 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
               fontStyle={labelStyle.fontStyle}
               fill={labelStyle.color}
               letterSpacing={labelStyle.letterSpacing}
-              textAnchor={labelStyle.anchor}
+              textAnchor={textAnchor}
               dominantBaseline={baseline}
               transform={
                 labelStyle.rotation

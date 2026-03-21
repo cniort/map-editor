@@ -10,7 +10,8 @@ import { useProjectStore } from '@/stores/projectStore'
 import { useGeoData } from '@/hooks/useGeoData'
 import { searchCity, type GeocodingResult } from '@/utils/geocode'
 import { exportSvg, exportPng } from '@/utils/export'
-import type { RouteStyle, MarkerShape, CityConfig, CityCategory, TextAnnotation, ProjectionType } from '@/types'
+import type { RouteStyle, MarkerShape, CityConfig, CityCategory, TextAnnotation, ProjectionType, LabelAnchorPosition } from '@/types'
+import { LABEL_POSITIONS } from '@/utils/labelPosition'
 import { Settings2, Search, Download, Save, FileUp } from 'lucide-react'
 import { useState, useRef, useCallback } from 'react'
 
@@ -301,6 +302,33 @@ function CityProperties({ cityId }: { cityId: string }) {
         <select value={city.categoryId} onChange={(e) => updateCity(cityId, { categoryId: e.target.value })} className="h-7 w-full rounded-md border border-input bg-background px-2 text-xs">
           {cityCategories.map((cat) => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
         </select>
+      </PropertyGroup>
+
+      <Separator />
+
+      <PropertyGroup title="Position du label">
+        <div className="grid grid-cols-3 gap-1 w-fit mx-auto">
+          {(['NO', 'N', 'NE', 'O', null, 'E', 'SO', 'S', 'SE'] as (LabelAnchorPosition | null)[]).map((pos, i) => {
+            if (pos === null) {
+              return <div key={i} className="h-7 w-7 flex items-center justify-center">
+                <div className="h-2.5 w-2.5 rounded-full bg-primary" />
+              </div>
+            }
+            const isActive = city.labelAnchorPosition === pos || (!city.labelAnchorPosition && pos === 'E')
+            return (
+              <button
+                key={pos}
+                className={`h-7 w-7 rounded text-[9px] font-medium transition-colors ${
+                  isActive ? 'bg-primary text-primary-foreground' : 'border border-border hover:bg-accent'
+                }`}
+                onClick={() => updateCity(cityId, { labelAnchorPosition: pos })}
+                title={LABEL_POSITIONS.find((p) => p.value === pos)?.label}
+              >
+                {pos}
+              </button>
+            )
+          })}
+        </div>
       </PropertyGroup>
 
       <Separator />

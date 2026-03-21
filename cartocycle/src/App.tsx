@@ -3,6 +3,8 @@ import { Toolbar } from '@/components/Toolbar'
 import { LayerPanel } from '@/components/LayerPanel'
 import { PropertiesPanel } from '@/components/PropertiesPanel'
 import { MapCanvas } from '@/components/MapCanvas'
+import { FormatOverlay } from '@/components/FormatOverlay'
+import { ScaleBar } from '@/components/ScaleBar'
 import { useMapStore } from '@/stores/mapStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { exportSvg } from '@/utils/export'
@@ -10,6 +12,7 @@ import { exportSvg } from '@/utils/export'
 function App() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 })
+  const [fullscreen, setFullscreen] = useState(false)
   const undo = useMapStore((s) => s.undo)
   const redo = useMapStore((s) => s.redo)
   const canvas = useMapStore((s) => s.canvas)
@@ -63,6 +66,7 @@ function App() {
       if (mod && e.key === 'z') { e.preventDefault(); if (e.shiftKey) redo(); else undo() }
       if (mod && e.key === 's') { e.preventDefault(); saveToFile() }
       if (mod && e.key === 'e') { e.preventDefault(); exportSvg(useProjectStore.getState().projectName, canvas) }
+      if (e.key === 'F11' || (mod && e.key === '\\')) { e.preventDefault(); setFullscreen((f) => !f) }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
@@ -76,18 +80,22 @@ function App() {
 
   return (
     <div className="flex h-full w-full flex-col bg-background">
-      <Toolbar />
+      <Toolbar fullscreen={fullscreen} onToggleFullscreen={() => setFullscreen((f) => !f)} />
       <div className="flex flex-1 overflow-hidden">
-        <LayerPanel />
+        {!fullscreen && <LayerPanel />}
         <main
           ref={containerRef}
           className="map-canvas-container relative flex-1 overflow-hidden bg-muted/30"
         >
           {canvasSize.width > 0 && canvasSize.height > 0 && (
-            <MapCanvas width={canvasSize.width} height={canvasSize.height} />
+            <>
+              <MapCanvas width={canvasSize.width} height={canvasSize.height} />
+              <FormatOverlay canvasWidth={canvasSize.width} canvasHeight={canvasSize.height} />
+              <ScaleBar canvasWidth={canvasSize.width} canvasHeight={canvasSize.height} />
+            </>
           )}
         </main>
-        <PropertiesPanel />
+        {!fullscreen && <PropertiesPanel />}
       </div>
     </div>
   )

@@ -10,6 +10,7 @@ import {
   ZoomIn,
   ZoomOut,
   Maximize2,
+  Minimize2,
   Lock,
   Unlock,
   Undo2,
@@ -47,7 +48,7 @@ function ToolbarButton({
   )
 }
 
-export function Toolbar() {
+export function Toolbar({ fullscreen, onToggleFullscreen }: { fullscreen: boolean; onToggleFullscreen: () => void }) {
   const canvas = useMapStore((s) => s.canvas)
   const setProjection = useMapStore((s) => s.setProjection)
   const toggleLock = useMapStore((s) => s.toggleLock)
@@ -112,6 +113,12 @@ export function Toolbar() {
             <span className="mr-1 h-2 w-2 rounded-full bg-amber-400" title="Modifications non sauvegardées" />
           )}
           <ToolbarButton icon={Save} label="Sauvegarder (Ctrl+S)" onClick={saveToFile} />
+          <ToolbarButton
+            icon={fullscreen ? Minimize2 : Maximize2}
+            label={fullscreen ? 'Quitter le plein écran' : 'Plein écran'}
+            onClick={onToggleFullscreen}
+            active={fullscreen}
+          />
           <ToolbarButton icon={Settings} label="Paramètres" onClick={() => setSettingsOpen(true)} />
         </div>
       </header>
