@@ -67,8 +67,10 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
   // Stable ref for zoom behavior (never recreated)
   const zoomBehaviorLocalRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null)
 
-  // Effect 1: Create zoom behavior ONCE at mount
+  // Effect 1: Create zoom behavior when SVG is available (after loading)
   useEffect(() => {
+    if (loading) return // SVG not mounted yet
+
     const svg = svgRef.current
     const g = gRef.current
     if (!svg || !g) return
@@ -94,10 +96,11 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
       zoomBehaviorRef = null
       svgElementRef = null
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [loading]) // Re-run when loading changes from true to false
 
-  // Effect 2: Handle locked mode (only depends on canvas.locked)
+  // Effect 2: Handle locked mode
   useEffect(() => {
+    if (loading) return
     const svg = svgRef.current
     const zb = zoomBehaviorLocalRef.current
     if (!svg || !zb) return
@@ -113,7 +116,7 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
     } else {
       svgSel.call(zb)
     }
-  }, [canvas.locked])
+  }, [canvas.locked, loading])
 
   const renderLayer = useCallback(
     (fc: FeatureCollection | null, layerId: string) => {
