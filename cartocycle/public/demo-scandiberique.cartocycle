@@ -1,0 +1,199 @@
+{
+  "version": "1.0.0",
+  "name": "Carte Scandibérique - Flyer",
+  "createdAt": "2026-03-21T00:00:00.000Z",
+  "updatedAt": "2026-03-21T00:00:00.000Z",
+  "canvas": {
+    "widthMm": 100,
+    "heightMm": 210,
+    "projection": {
+      "type": "mercator",
+      "center": [3, 51],
+      "scale": 580,
+      "translate": [0, 0]
+    },
+    "backgroundColor": "#FFFFFF",
+    "locked": false
+  },
+  "baseMap": {
+    "layers": [
+      {
+        "id": "countries",
+        "type": "countries",
+        "visible": true,
+        "zIndex": 1,
+        "smoothing": 12,
+        "style": {
+          "fill": "#E0E0E0",
+          "fillOpacity": 1,
+          "stroke": "#C0C0C0",
+          "strokeWidth": 0.4,
+          "strokeOpacity": 1
+        },
+        "countryOverrides": {
+          "FRA": { "fill": "#6B6B6B" }
+        }
+      },
+      {
+        "id": "coastline",
+        "type": "coastline",
+        "visible": false,
+        "zIndex": 2,
+        "smoothing": 0,
+        "style": { "fill": "none", "fillOpacity": 0, "stroke": "#CCCCCC", "strokeWidth": 0.3, "strokeOpacity": 1 }
+      },
+      {
+        "id": "rivers",
+        "type": "rivers",
+        "visible": false,
+        "zIndex": 3,
+        "smoothing": 0,
+        "style": { "fill": "none", "fillOpacity": 0, "stroke": "#88B4D0", "strokeWidth": 0.5, "strokeOpacity": 1 }
+      },
+      {
+        "id": "regions",
+        "type": "regions",
+        "visible": false,
+        "zIndex": 4,
+        "smoothing": 0,
+        "style": { "fill": "none", "fillOpacity": 0, "stroke": "#BBBBBB", "strokeWidth": 0.3, "strokeOpacity": 0.6 }
+      }
+    ]
+  },
+  "routes": [],
+  "cities": [
+    { "id": "c-trondheim", "name": "Trondheim", "coordinates": [10.3951, 63.4305], "categoryId": "route-city", "visible": true },
+    { "id": "c-gothenburg", "name": "Gothenburg", "coordinates": [11.9746, 57.7089], "categoryId": "route-city", "visible": true },
+    { "id": "c-aalborg", "name": "Aalborg", "coordinates": [9.9217, 57.0488], "categoryId": "route-city", "visible": true },
+    { "id": "c-hamburg", "name": "Hambourg", "coordinates": [9.9937, 53.5511], "categoryId": "route-city", "visible": true },
+    { "id": "c-cologne", "name": "Cologne", "coordinates": [6.9603, 50.9375], "categoryId": "route-city", "visible": true },
+    { "id": "c-namur", "name": "Namur", "coordinates": [4.8622, 50.4674], "categoryId": "route-city", "visible": true },
+    { "id": "c-compiegne", "name": "Compiègne", "coordinates": [2.826, 49.4178], "categoryId": "route-city", "visible": true },
+    { "id": "c-paris", "name": "Paris", "coordinates": [2.3522, 48.8566], "categoryId": "main-city", "visible": true },
+    { "id": "c-orleans", "name": "Orléans", "coordinates": [1.909, 47.9029], "categoryId": "route-city", "visible": true },
+    { "id": "c-tours", "name": "Tours", "coordinates": [0.6848, 47.3941], "categoryId": "route-city", "visible": true },
+    { "id": "c-angouleme", "name": "Angoulême", "coordinates": [0.16, 45.65], "categoryId": "route-city", "visible": true },
+    { "id": "c-bordeaux", "name": "Bordeaux", "coordinates": [-0.5792, 44.8378], "categoryId": "route-city", "visible": true },
+    { "id": "c-mont-de-marsan", "name": "Mont-de-Marsan", "coordinates": [-0.5, 43.89], "categoryId": "route-city", "visible": true },
+    { "id": "c-pau", "name": "Pau", "coordinates": [-0.3708, 43.2951], "categoryId": "route-city", "visible": true },
+    { "id": "c-pampelune", "name": "Pampelune", "coordinates": [-1.6458, 42.8169], "categoryId": "route-city", "visible": true },
+    { "id": "c-lugo", "name": "Lugo", "coordinates": [-7.556, 43.0097], "categoryId": "route-city", "visible": true },
+    { "id": "c-stjacques", "name": "St-Jacques-de-Compostelle", "coordinates": [-8.5448, 42.8782], "categoryId": "route-city", "visible": true }
+  ],
+  "cityCategories": [
+    {
+      "id": "route-city",
+      "name": "Ville étape",
+      "markerStyle": {
+        "shape": "circle",
+        "size": 3,
+        "fill": "#D42A2A",
+        "fillOpacity": 1,
+        "stroke": "#FFFFFF",
+        "strokeWidth": 0.5
+      },
+      "labelStyle": {
+        "fontFamily": "Gotham",
+        "fontSize": 8,
+        "fontWeight": 400,
+        "fontStyle": "normal",
+        "color": "#333333",
+        "letterSpacing": 0,
+        "offset": { "x": 6, "y": 0 },
+        "anchor": "start",
+        "baseline": "central",
+        "rotation": 0,
+        "showLeaderLine": false,
+        "backgroundOpacity": 0
+      }
+    },
+    {
+      "id": "main-city",
+      "name": "Ville principale",
+      "markerStyle": {
+        "shape": "circle",
+        "size": 4,
+        "fill": "#D42A2A",
+        "fillOpacity": 1,
+        "stroke": "#FFFFFF",
+        "strokeWidth": 0.5
+      },
+      "labelStyle": {
+        "fontFamily": "Gotham",
+        "fontSize": 10,
+        "fontWeight": 700,
+        "fontStyle": "normal",
+        "color": "#333333",
+        "letterSpacing": 0,
+        "offset": { "x": 7, "y": 0 },
+        "anchor": "start",
+        "baseline": "central",
+        "rotation": 0,
+        "showLeaderLine": false,
+        "backgroundOpacity": 0
+      }
+    }
+  ],
+  "annotations": [
+    {
+      "type": "text", "id": "ann-france", "content": "FRANCE",
+      "position": { "x": 0, "y": 0 }, "geoCoordinates": [2.5, 46.5],
+      "style": { "fontFamily": "Gotham", "fontSize": 10, "fontWeight": 500, "fontStyle": "normal", "color": "#E8E8E8", "letterSpacing": 5, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "zIndex": 100
+    },
+    {
+      "type": "text", "id": "ann-norvege", "content": "NORVÈGE",
+      "position": { "x": 0, "y": 0 }, "geoCoordinates": [8, 62],
+      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "zIndex": 100
+    },
+    {
+      "type": "text", "id": "ann-suede", "content": "SUÈDE",
+      "position": { "x": 0, "y": 0 }, "geoCoordinates": [15, 60],
+      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "zIndex": 100
+    },
+    {
+      "type": "text", "id": "ann-danemark", "content": "DANEMARK",
+      "position": { "x": 0, "y": 0 }, "geoCoordinates": [10, 56],
+      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "zIndex": 100
+    },
+    {
+      "type": "text", "id": "ann-allemagne", "content": "ALLEMAGNE",
+      "position": { "x": 0, "y": 0 }, "geoCoordinates": [10, 51],
+      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "zIndex": 100
+    },
+    {
+      "type": "text", "id": "ann-paysbas", "content": "PAYS-BAS",
+      "position": { "x": 0, "y": 0 }, "geoCoordinates": [5.5, 52.3],
+      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "zIndex": 100
+    },
+    {
+      "type": "text", "id": "ann-belgique", "content": "BELGIQUE",
+      "position": { "x": 0, "y": 0 }, "geoCoordinates": [4.5, 50.8],
+      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "zIndex": 100
+    },
+    {
+      "type": "text", "id": "ann-espagne", "content": "ESPAGNE",
+      "position": { "x": 0, "y": 0 }, "geoCoordinates": [-4, 40],
+      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "zIndex": 100
+    }
+  ],
+  "legend": {
+    "visible": false,
+    "position": { "x": 20, "y": 20 },
+    "width": 200,
+    "style": {
+      "backgroundColor": "#FFFFFF", "backgroundOpacity": 0.9, "borderColor": "#CCCCCC",
+      "borderWidth": 1, "borderRadius": 4, "padding": 12,
+      "fontFamily": "Gotham", "fontSize": 11, "fontColor": "#333333",
+      "titleFontSize": 14, "titleFontWeight": 700
+    },
+    "title": "Légende", "items": []
+  }
+}

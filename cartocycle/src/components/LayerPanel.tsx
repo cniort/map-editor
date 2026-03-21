@@ -1,0 +1,307 @@
+import { useCallback } from 'react'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { useMapStore, type SelectionType } from '@/stores/mapStore'
+import { gpx } from '@tmcw/togeojson'
+import type { RouteConfig, RouteStyle, TextAnnotation } from '@/types'
+import {
+  Eye,
+  EyeOff,
+  Layers,
+  MapIcon,
+  Route,
+  MapPin,
+  Type,
+  LayoutList,
+  Plus,
+  ChevronDown,
+  ChevronRight,
+} from 'lucide-react'
+import { useState } from 'react'
+
+interface LayerItemProps {
+  id: string
+  type: SelectionType
+  label: string
+  icon: React.ElementType
+  visible?: boolean
+  onToggleVisibility?: () => void
+  selected: boolean
+  onSelect: () => void
+  indent?: number
+  children?: React.ReactNode
+}
+
+function LayerItem({ label, icon: Icon, visible, onToggleVisibility, selected, onSelect, indent = 0, children }: LayerItemProps) {
+  const [expanded, setExpanded] = useState(true)
+  const hasChildren = !!children
+
+  return (
+    <div>
+      <div
+        className={`flex items-center gap-1.5 rounded px-2 py-1.5 cursor-pointer transition-colors ${
+          selected ? 'bg-primary/10 text-primary' : 'hover:bg-accent'
+        }`}
+        style={{ paddingLeft: `${10 + indent * 18}px` }}
+        onClick={onSelect}
+      >
+        {hasChildren ? (
+          <button
+            className="h-4 w-4 shrink-0 text-muted-foreground hover:text-foreground"
+            onClick={(e) => { e.stopPropagation(); setExpanded(!expanded) }}
+          >
+            {expanded ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+          </button>
+        ) : (
+          <span className="w-4" />
+        )}
+        <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <span className="flex-1 truncate text-[13px]">{label}</span>
+        {onToggleVisibility && (
+          <button
+            className="h-6 w-6 shrink-0 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+            onClick={(e) => { e.stopPropagation(); onToggleVisibility() }}
+            aria-label={visible ? 'Masquer' : 'Afficher'}
+          >
+            {visible ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3 opacity-40" />}
+          </button>
+        )}
+      </div>
+      {hasChildren && expanded && <div>{children}</div>}
+    </div>
+  )
+}
+
+export function LayerPanel() {
+  const baseMap = useMapStore((s) => s.baseMap)
+  const routes = useMapStore((s) => s.routes)
+  const cities = useMapStore((s) => s.cities)
+  const cityCategories = useMapStore((s) => s.cityCategories)
+  const annotations = useMapStore((s) => s.annotations)
+  const selectedId = useMapStore((s) => s.selectedId)
+  const selectedType = useMapStore((s) => s.selectedType)
+  const select = useMapStore((s) => s.select)
+  const toggleLayerVisibility = useMapStore((s) => s.toggleLayerVisibility)
+  const updateRoute = useMapStore((s) => s.updateRoute)
+  const addRoute = useMapStore((s) => s.addRoute)
+  const addAnnotation = useMapStore((s) => s.addAnnotation)
+
+  const isSelected = (id: string, type: SelectionType) => selectedId === id && selectedType === type
+
+  const LAYER_LABELS: Record<string, string> = {
+    countries: 'Pays',
+    coastline: 'Littoral',
+    rivers: 'Fleuves',
+    regions: 'Régions',
+  }
+
+  const handleImportRoute = useCallback(() => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.gpx,.geojson,.json'
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
+      if (!file) return
+      if (file.size > 50 * 1024 * 1024) { alert('Fichier trop volumineux (max 50 Mo)'); return }
+      try {
+        const text = await file.text()
+        let geometry: RouteConfig['originalGeometry']
+
+        if (file.name.endsWith('.gpx')) {
+          const parser = new DOMParser()
+          const doc = parser.parseFromString(text, 'text/xml')
+          const geojson = gpx(doc)
+          const lineFeature = geojson.features.find(
+            (f) => f.geometry.type === 'LineString' || f.geometry.type === 'MultiLineString'
+          )
+          if (!lineFeature) { alert('Aucun tracé trouvé'); return }
+          geometry = lineFeature.geometry as RouteConfig['originalGeometry']
+        } else {
+          const geojson = JSON.parse(text)
+          const features = geojson.type === 'FeatureCollection' ? geojson.features : [geojson.type === 'Feature' ? geojson : { geometry: geojson }]
+          const lineFeature = features.find((f: { geometry: { type: string } }) => f.geometry.type === 'LineString' || f.geometry.type === 'MultiLineString')
+          if (!lineFeature) { alert('Aucun tracé trouvé'); return }
+          geometry = lineFeature.geometry
+        }
+
+        const defaultStyle: RouteStyle = {
+          fill: 'none', fillOpacity: 0, stroke: '#E74C3C', strokeWidth: 3, strokeOpacity: 1,
+          strokeLinecap: 'round', strokeLinejoin: 'round',
+        }
+        const route: RouteConfig = {
+          id: crypto.randomUUID(),
+          name: file.name.replace(/\.(gpx|geojson|json)$/, ''),
+          visible: true, zIndex: routes.length + 10, sourceFile: file.name,
+          originalGeometry: geometry, simplification: 0, smoothing: 0, style: defaultStyle,
+        }
+        addRoute(route)
+        select(route.id, 'route')
+      } catch { alert('Erreur de lecture du fichier') }
+    }
+    input.click()
+  }, [addRoute, routes.length, select])
+
+  const handleAddAnnotation = () => {
+    const ann: TextAnnotation = {
+      type: 'text', id: crypto.randomUUID(), content: 'Nouveau texte',
+      position: { x: 100, y: 100 },
+      style: {
+        fontFamily: 'Gotham', fontSize: 16, fontWeight: 400, fontStyle: 'normal',
+        color: '#333333', letterSpacing: 0, offset: { x: 0, y: 0 },
+        anchor: 'start', baseline: 'auto', rotation: 0, showLeaderLine: false,
+      },
+      zIndex: 100,
+    }
+    addAnnotation(ann)
+    select(ann.id, 'annotation')
+  }
+
+  return (
+    <aside className="flex h-full w-[240px] shrink-0 flex-col border-r border-border bg-card/50">
+      {/* Header */}
+      <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
+        <Layers className="h-4 w-4 text-primary" />
+        <span className="text-xs font-bold tracking-tight">CALQUES</span>
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        <div className="py-1">
+          {/* Annotations */}
+          <LayerItem
+            id="annotations-group"
+            type="annotation"
+            label={`Annotations (${annotations.length})`}
+            icon={Type}
+            selected={false}
+            onSelect={() => {}}
+          >
+            {annotations.filter((a) => a.type === 'text').map((ann) => (
+              <LayerItem
+                key={ann.id}
+                id={ann.id}
+                type="annotation"
+                label={(ann as TextAnnotation).content}
+                icon={Type}
+                selected={isSelected(ann.id, 'annotation')}
+                onSelect={() => select(ann.id, 'annotation')}
+                indent={1}
+              />
+            ))}
+          </LayerItem>
+
+          {/* Villes */}
+          <LayerItem
+            id="cities-group"
+            type={null}
+            label={`Villes (${cities.length})`}
+            icon={MapPin}
+            selected={false}
+            onSelect={() => {}}
+          >
+            {cityCategories.map((cat) => {
+              const catCities = cities.filter((c) => c.categoryId === cat.id)
+              if (catCities.length === 0) return null
+              return (
+                <LayerItem
+                  key={cat.id}
+                  id={cat.id}
+                  type="cityCategory"
+                  label={`${cat.name} (${catCities.length})`}
+                  icon={LayoutList}
+                  selected={isSelected(cat.id, 'cityCategory')}
+                  onSelect={() => select(cat.id, 'cityCategory')}
+                  indent={1}
+                >
+                  {catCities.map((city) => (
+                    <LayerItem
+                      key={city.id}
+                      id={city.id}
+                      type="city"
+                      label={city.name}
+                      icon={MapPin}
+                      visible={city.visible}
+                      selected={isSelected(city.id, 'city')}
+                      onSelect={() => select(city.id, 'city')}
+                      indent={2}
+                    />
+                  ))}
+                </LayerItem>
+              )
+            })}
+          </LayerItem>
+
+          {/* Itinéraires */}
+          <LayerItem
+            id="routes-group"
+            type={null}
+            label={`Itinéraires (${routes.length})`}
+            icon={Route}
+            selected={false}
+            onSelect={() => {}}
+          >
+            {routes.map((route) => (
+              <LayerItem
+                key={route.id}
+                id={route.id}
+                type="route"
+                label={route.name}
+                icon={Route}
+                visible={route.visible}
+                onToggleVisibility={() => updateRoute(route.id, { visible: !route.visible })}
+                selected={isSelected(route.id, 'route')}
+                onSelect={() => select(route.id, 'route')}
+                indent={1}
+              />
+            ))}
+          </LayerItem>
+
+          {/* Fond de carte */}
+          <LayerItem
+            id="basemap-group"
+            type={null}
+            label="Fond de carte"
+            icon={MapIcon}
+            selected={false}
+            onSelect={() => {}}
+          >
+            {[...baseMap.layers].reverse().map((layer) => (
+              <LayerItem
+                key={layer.id}
+                id={layer.id}
+                type="layer"
+                label={LAYER_LABELS[layer.id] || layer.id}
+                icon={MapIcon}
+                visible={layer.visible}
+                onToggleVisibility={() => toggleLayerVisibility(layer.id)}
+                selected={isSelected(layer.id, 'layer')}
+                onSelect={() => select(layer.id, 'layer')}
+                indent={1}
+              />
+            ))}
+          </LayerItem>
+
+          {/* Canvas */}
+          <Separator className="my-1" />
+          <LayerItem
+            id="canvas"
+            type="canvas"
+            label="Canvas"
+            icon={Layers}
+            selected={isSelected('canvas', 'canvas')}
+            onSelect={() => select('canvas', 'canvas')}
+          />
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex gap-1 border-t border-border p-2">
+        <Button variant="ghost" size="sm" className="h-7 flex-1 text-[11px]" onClick={handleImportRoute}>
+          <Plus className="mr-1 h-3 w-3" /> Itinéraire
+        </Button>
+        <Button variant="ghost" size="sm" className="h-7 flex-1 text-[11px]" onClick={handleAddAnnotation}>
+          <Plus className="mr-1 h-3 w-3" /> Texte
+        </Button>
+      </div>
+    </aside>
+  )
+}
