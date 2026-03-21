@@ -1,0 +1,19 @@
+.env.local
+.mcp.json
+.mcp.json.backup
+.claude/settings.local.json
+
+# Node
+node_modules/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Fonts (propriétaires)
+Gotham-font-family/
+
+# IDE
+.vscode/
+.idea/
