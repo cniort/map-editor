@@ -19,6 +19,7 @@ import {
   ChevronDown,
   ChevronRight,
   Search,
+  Trash2,
 } from 'lucide-react'
 
 interface LayerItemProps {
@@ -28,20 +29,23 @@ interface LayerItemProps {
   icon: React.ElementType
   visible?: boolean
   onToggleVisibility?: () => void
+  onDelete?: () => void
+  deleteLabel?: string
   selected: boolean
   onSelect: () => void
   indent?: number
   children?: React.ReactNode
 }
 
-function LayerItem({ label, icon: Icon, visible, onToggleVisibility, selected, onSelect, indent = 0, children }: LayerItemProps) {
+function LayerItem({ label, icon: Icon, visible, onToggleVisibility, onDelete, deleteLabel, selected, onSelect, indent = 0, children }: LayerItemProps) {
   const [expanded, setExpanded] = useState(true)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const hasChildren = !!children
 
   return (
     <div>
       <div
-        className={`flex items-center gap-1.5 rounded px-2 py-1.5 cursor-pointer transition-colors ${
+        className={`group flex items-center gap-1.5 rounded px-2 py-1.5 cursor-pointer transition-colors ${
           selected ? 'bg-primary/10 text-primary' : 'hover:bg-accent'
         }`}
         style={{ paddingLeft: `${10 + indent * 18}px` }}
@@ -68,7 +72,27 @@ function LayerItem({ label, icon: Icon, visible, onToggleVisibility, selected, o
             {visible ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3 opacity-40" />}
           </button>
         )}
+        {onDelete && !confirmDelete && (
+          <button
+            className="h-6 w-6 shrink-0 rounded p-1 text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive transition-opacity"
+            onClick={(e) => { e.stopPropagation(); setConfirmDelete(true) }}
+            aria-label="Supprimer"
+          >
+            <Trash2 className="h-3 w-3" />
+          </button>
+        )}
       </div>
+      {confirmDelete && onDelete && (
+        <div className="flex items-center gap-1 px-3 py-1 text-[11px]" style={{ paddingLeft: `${28 + indent * 18}px` }}>
+          <span className="text-destructive">{deleteLabel || 'Supprimer ?'}</span>
+          <button className="rounded bg-destructive px-2 py-0.5 text-[10px] text-white" onClick={(e) => { e.stopPropagation(); onDelete(); setConfirmDelete(false) }}>
+            Oui
+          </button>
+          <button className="rounded border border-border px-2 py-0.5 text-[10px]" onClick={(e) => { e.stopPropagation(); setConfirmDelete(false) }}>
+            Non
+          </button>
+        </div>
+      )}
       {hasChildren && expanded && <div>{children}</div>}
     </div>
   )
@@ -88,6 +112,23 @@ export function LayerPanel() {
   const addRoute = useMapStore((s) => s.addRoute)
   const addAnnotation = useMapStore((s) => s.addAnnotation)
   const addCity = useMapStore((s) => s.addCity)
+  const removeAnnotation = useMapStore((s) => s.removeAnnotation)
+  const removeCity = useMapStore((s) => s.removeCity)
+  const removeRoute = useMapStore((s) => s.removeRoute)
+  const loadState = useMapStore((s) => s.loadState)
+
+  const clearAllAnnotations = () => {
+    const state = useMapStore.getState()
+    loadState({ canvas: state.canvas, baseMap: state.baseMap, routes: state.routes, cities: state.cities, cityCategories: state.cityCategories, annotations: [], legend: state.legend })
+  }
+  const clearAllCities = () => {
+    const state = useMapStore.getState()
+    loadState({ canvas: state.canvas, baseMap: state.baseMap, routes: state.routes, cities: [], cityCategories: state.cityCategories, annotations: state.annotations, legend: state.legend })
+  }
+  const clearAllRoutes = () => {
+    const state = useMapStore.getState()
+    loadState({ canvas: state.canvas, baseMap: state.baseMap, routes: [], cities: state.cities, cityCategories: state.cityCategories, annotations: state.annotations, legend: state.legend })
+  }
 
   const [showCitySearch, setShowCitySearch] = useState(false)
   const [cityQuery, setCityQuery] = useState('')
@@ -205,6 +246,8 @@ export function LayerPanel() {
             icon={Type}
             selected={false}
             onSelect={() => {}}
+            onDelete={annotations.length > 0 ? clearAllAnnotations : undefined}
+            deleteLabel={`Supprimer les ${annotations.length} annotations ?`}
           >
             {annotations.filter((a) => a.type === 'text').map((ann) => (
               <LayerItem
@@ -215,6 +258,7 @@ export function LayerPanel() {
                 icon={Type}
                 selected={isSelected(ann.id, 'annotation')}
                 onSelect={() => select(ann.id, 'annotation')}
+                onDelete={() => removeAnnotation(ann.id)}
                 indent={1}
               />
             ))}
@@ -228,6 +272,8 @@ export function LayerPanel() {
             icon={MapPin}
             selected={false}
             onSelect={() => {}}
+            onDelete={cities.length > 0 ? clearAllCities : undefined}
+            deleteLabel={`Supprimer les ${cities.length} villes ?`}
           >
             {cityCategories.map((cat) => {
               const catCities = cities.filter((c) => c.categoryId === cat.id)
@@ -251,6 +297,7 @@ export function LayerPanel() {
                       label={city.name}
                       icon={MapPin}
                       visible={city.visible}
+                      onDelete={() => removeCity(city.id)}
                       selected={isSelected(city.id, 'city')}
                       onSelect={() => select(city.id, 'city')}
                       indent={2}
@@ -269,6 +316,8 @@ export function LayerPanel() {
             icon={Route}
             selected={false}
             onSelect={() => {}}
+            onDelete={routes.length > 0 ? clearAllRoutes : undefined}
+            deleteLabel={`Supprimer les ${routes.length} itinéraires ?`}
           >
             {routes.map((route) => (
               <LayerItem
@@ -279,6 +328,7 @@ export function LayerPanel() {
                 icon={Route}
                 visible={route.visible}
                 onToggleVisibility={() => updateRoute(route.id, { visible: !route.visible })}
+                onDelete={() => removeRoute(route.id)}
                 selected={isSelected(route.id, 'route')}
                 onSelect={() => select(route.id, 'route')}
                 indent={1}

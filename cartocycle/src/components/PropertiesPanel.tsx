@@ -13,6 +13,7 @@ import { exportSvg, exportPng } from '@/utils/export'
 import type { RouteStyle, MarkerShape, CityConfig, CityCategory, TextAnnotation, ProjectionType, LabelAnchorPosition } from '@/types'
 import { LABEL_POSITIONS } from '@/utils/labelPosition'
 import { Settings2, Search, Download, Save, FileUp } from 'lucide-react'
+import { BUILT_IN_PRESETS, getCustomPresets } from '@/utils/presets'
 import { useState, useRef, useCallback } from 'react'
 
 const DASH_PRESETS = [
@@ -36,6 +37,43 @@ function PropertyGroup({ title, children }: { title: string; children: React.Rea
   )
 }
 
+// === Style Presets ===
+function PresetsSection() {
+  const setBackgroundColor = useMapStore((s) => s.setBackgroundColor)
+  const updateLayerStyle = useMapStore((s) => s.updateLayerStyle)
+  const updateLayerSmoothing = useMapStore((s) => s.updateLayerSmoothing)
+  const setCountryOverride = useMapStore((s) => s.setCountryOverride)
+
+  const applyPreset = (preset: import('@/utils/presets').StylePreset) => {
+    setBackgroundColor(preset.backgroundColor)
+    updateLayerStyle('countries', { fill: preset.countriesFill, stroke: preset.countriesStroke })
+    updateLayerSmoothing('countries', preset.smoothing)
+    setCountryOverride('countries', 'FRA', { fill: preset.franceFill })
+  }
+
+  const allPresets = [...BUILT_IN_PRESETS, ...getCustomPresets()]
+
+  return (
+    <PropertyGroup title="Presets de style">
+      <div className="grid grid-cols-2 gap-1.5">
+        {allPresets.map((p) => (
+          <button
+            key={p.id}
+            className="flex items-center gap-2 rounded border border-border p-2 text-left transition-colors hover:bg-accent"
+            onClick={() => applyPreset(p)}
+          >
+            <div className="flex gap-0.5">
+              <div className="h-4 w-4 rounded-sm" style={{ backgroundColor: p.franceFill }} />
+              <div className="h-4 w-2 rounded-sm" style={{ backgroundColor: p.routeStroke }} />
+            </div>
+            <span className="text-[11px] font-medium truncate">{p.name}</span>
+          </button>
+        ))}
+      </div>
+    </PropertyGroup>
+  )
+}
+
 // === Canvas Properties ===
 function CanvasProperties() {
   const canvas = useMapStore((s) => s.canvas)
@@ -55,6 +93,10 @@ function CanvasProperties() {
       <PropertyGroup title="Projet">
         <Input value={projectName} onChange={(e) => setProjectName(e.target.value)} className="h-7 text-xs font-medium" placeholder="Nom du projet" />
       </PropertyGroup>
+
+      <Separator />
+
+      <PresetsSection />
 
       <Separator />
 

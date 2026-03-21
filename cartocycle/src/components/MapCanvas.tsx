@@ -11,6 +11,7 @@ import { smoothedPath } from '@/utils/smoothGeo'
 import type { FeatureCollection, Feature } from 'geojson'
 import type { ShapeStyle, MarkerStyle, TextAnnotation } from '@/types'
 import { getLabelOffset } from '@/utils/labelPosition'
+import { useUiStore } from '@/stores/uiStore'
 
 interface MapCanvasProps {
   width: number
@@ -344,7 +345,25 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      style={{ backgroundColor: canvas.backgroundColor, cursor: canvas.locked ? 'default' : 'grab' }}
+      style={{
+        backgroundColor: canvas.backgroundColor,
+        cursor: useUiStore.getState().eyedropperActive ? 'crosshair' : canvas.locked ? 'default' : 'grab',
+      }}
+      onClick={(e) => {
+        if (useUiStore.getState().eyedropperActive) {
+          const target = e.target as SVGElement
+          const fill = target.getAttribute('fill') || target.style.fill
+          if (fill && fill !== 'none') {
+            useUiStore.getState().setPickedColor(fill)
+            navigator.clipboard?.writeText(fill)
+          }
+          return
+        }
+        // Click on empty canvas area → select Canvas
+        if (e.target === svgRef.current) {
+          selectElement('canvas', 'canvas')
+        }
+      }}
     >
       <g ref={gRef}>
         {renderLayer(data.countries, 'countries')}
