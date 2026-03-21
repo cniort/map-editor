@@ -6,6 +6,7 @@ import { useMapStore } from '@/stores/mapStore'
 import { useProjection } from '@/hooks/useProjection'
 import { useGeoData } from '@/hooks/useGeoData'
 import { RouteRenderer } from '@/components/RouteRenderer'
+import { LegendRenderer } from '@/components/LegendRenderer'
 import { smoothedPath } from '@/utils/smoothGeo'
 import type { FeatureCollection, Feature } from 'geojson'
 import type { ShapeStyle, MarkerStyle, TextAnnotation } from '@/types'
@@ -430,6 +431,9 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
         <g id="annotations">
           {renderAnnotations()}
         </g>
+
+        {/* Légende */}
+        <LegendRenderer />
       </g>
     </svg>
   )

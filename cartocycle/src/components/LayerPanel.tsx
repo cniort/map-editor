@@ -14,6 +14,7 @@ import {
   MapPin,
   Type,
   LayoutList,
+  LayoutGrid,
   Plus,
   ChevronDown,
   ChevronRight,
@@ -108,6 +109,7 @@ export function LayerPanel() {
   const cities = useMapStore((s) => s.cities)
   const cityCategories = useMapStore((s) => s.cityCategories)
   const annotations = useMapStore((s) => s.annotations)
+  const legend = useMapStore((s) => s.legend)
   const selectedId = useMapStore((s) => s.selectedId)
   const selectedType = useMapStore((s) => s.selectedType)
   const select = useMapStore((s) => s.select)
@@ -150,6 +152,10 @@ export function LayerPanel() {
   const clearAllRoutes = () => {
     const state = useMapStore.getState()
     loadState({ canvas: state.canvas, baseMap: state.baseMap, routes: [], cities: state.cities, cityCategories: state.cityCategories, annotations: state.annotations, legend: state.legend })
+  }
+  const toggleLegendVisibility = () => {
+    const state = useMapStore.getState()
+    loadState({ ...state, legend: { ...state.legend, visible: !state.legend.visible } } as any)
   }
 
   const [showCitySearch, setShowCitySearch] = useState(false)
@@ -301,6 +307,18 @@ export function LayerPanel() {
 
       <div className="flex-1 overflow-y-auto">
         <div className="py-1">
+          {/* Légende */}
+          <LayerItem
+            id="legend"
+            type="legend"
+            label="Légende"
+            icon={LayoutGrid}
+            visible={legend.visible}
+            onToggleVisibility={toggleLegendVisibility}
+            selected={isSelected('legend', 'legend')}
+            onSelect={() => select('legend', 'legend')}
+          />
+
           {/* Annotations */}
           <LayerItem
             id="annotations-group" collapseSignal={collapseKey}

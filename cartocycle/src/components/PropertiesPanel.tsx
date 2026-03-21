@@ -568,6 +568,71 @@ function AnnotationProperties({ annotationId }: { annotationId: string }) {
   )
 }
 
+// === Legend Properties ===
+function LegendProperties() {
+  const legend = useMapStore((s) => s.legend)
+  const loadState = useMapStore((s) => s.loadState)
+
+  const updateLegend = (update: Partial<typeof legend>) => {
+    const state = useMapStore.getState()
+    loadState({ canvas: state.canvas, baseMap: state.baseMap, routes: state.routes, cities: state.cities, cityCategories: state.cityCategories, annotations: state.annotations, legend: { ...state.legend, ...update } })
+  }
+
+  const updateLegendStyle = (update: Partial<typeof legend.style>) => {
+    updateLegend({ style: { ...legend.style, ...update } })
+  }
+
+  return (
+    <div className="space-y-4">
+      <PropertyGroup title="Légende">
+        <Input value={legend.title} onChange={(e) => updateLegend({ title: e.target.value })} className="h-7 text-xs font-medium" placeholder="Titre de la légende" />
+        <div className="flex items-center justify-between">
+          <Label className="text-xs">Visible</Label>
+          <Switch checked={legend.visible} onCheckedChange={(v) => updateLegend({ visible: v })} />
+        </div>
+      </PropertyGroup>
+
+      <Separator />
+
+      <PropertyGroup title="Position">
+        <div className="flex items-center gap-2">
+          <Label className="w-10 shrink-0 text-xs">X</Label>
+          <Input value={legend.position.x} onChange={(e) => updateLegend({ position: { ...legend.position, x: parseFloat(e.target.value) || 0 } })} className="h-7 text-xs" type="number" />
+          <Label className="w-10 shrink-0 text-xs">Y</Label>
+          <Input value={legend.position.y} onChange={(e) => updateLegend({ position: { ...legend.position, y: parseFloat(e.target.value) || 0 } })} className="h-7 text-xs" type="number" />
+        </div>
+        <SliderControl label="Largeur" value={legend.width} min={80} max={300} step={10} onChange={(v) => updateLegend({ width: v })} suffix="px" />
+      </PropertyGroup>
+
+      <Separator />
+
+      <PropertyGroup title="Style">
+        <ColorPicker label="Fond" value={legend.style.backgroundColor} onChange={(c) => updateLegendStyle({ backgroundColor: c })} />
+        <SliderControl label="Op. fond" value={Math.round(legend.style.backgroundOpacity * 100)} min={0} max={100} step={5} onChange={(v) => updateLegendStyle({ backgroundOpacity: v / 100 })} suffix="%" />
+        <ColorPicker label="Bordure" value={legend.style.borderColor} onChange={(c) => updateLegendStyle({ borderColor: c })} />
+        <SliderControl label="Ép. bordure" value={legend.style.borderWidth} min={0} max={3} step={0.5} onChange={(v) => updateLegendStyle({ borderWidth: v })} suffix="px" />
+        <SliderControl label="Arrondi" value={legend.style.borderRadius} min={0} max={12} step={1} onChange={(v) => updateLegendStyle({ borderRadius: v })} suffix="px" />
+        <SliderControl label="Padding" value={legend.style.padding} min={4} max={24} step={2} onChange={(v) => updateLegendStyle({ padding: v })} suffix="px" />
+      </PropertyGroup>
+
+      <Separator />
+
+      <PropertyGroup title="Typographie">
+        <SimpleSelect label="Police" value={legend.style.fontFamily} onChange={(v) => updateLegendStyle({ fontFamily: v })} options={FONT_OPTIONS} />
+        <SliderControl label="Taille" value={legend.style.fontSize} min={8} max={16} step={1} onChange={(v) => updateLegendStyle({ fontSize: v })} suffix="px" />
+        <ColorPicker label="Couleur" value={legend.style.fontColor} onChange={(c) => updateLegendStyle({ fontColor: c })} />
+        <SliderControl label="Titre" value={legend.style.titleFontSize} min={10} max={20} step={1} onChange={(v) => updateLegendStyle({ titleFontSize: v })} suffix="px" />
+      </PropertyGroup>
+
+      <Separator />
+
+      <p className="text-[11px] text-muted-foreground">
+        La légende est auto-générée à partir des itinéraires et catégories de villes visibles.
+      </p>
+    </div>
+  )
+}
+
 // === Search & Add City ===
 function AddCitySection() {
   const cityCategories = useMapStore((s) => s.cityCategories)
@@ -710,6 +775,8 @@ export function PropertiesPanel() {
         return <CityCategoryProperties categoryId={selectedId} />
       case 'annotation':
         return <AnnotationProperties annotationId={selectedId} />
+      case 'legend':
+        return <LegendProperties />
       default:
         return <CanvasProperties />
     }
