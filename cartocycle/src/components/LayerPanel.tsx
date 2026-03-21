@@ -1,6 +1,5 @@
 import { useCallback, useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import { useMapStore, type SelectionType } from '@/stores/mapStore'
 import { gpx } from '@tmcw/togeojson'
 import { searchCity, type GeocodingResult } from '@/utils/geocode'
@@ -228,8 +227,38 @@ export function LayerPanel() {
     select(ann.id, 'annotation')
   }
 
+  const MIN_WIDTH = 240
+  const DEFAULT_WIDTH = 300
+  const [panelWidth, setPanelWidth] = useState(DEFAULT_WIDTH)
+  const resizing = useRef(false)
+
+  const handleResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    resizing.current = true
+    const startX = e.clientX
+    const startWidth = panelWidth
+
+    const onMouseMove = (ev: MouseEvent) => {
+      if (!resizing.current) return
+      const newWidth = Math.max(MIN_WIDTH, startWidth + (ev.clientX - startX))
+      setPanelWidth(newWidth)
+    }
+    const onMouseUp = () => {
+      resizing.current = false
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup', onMouseUp)
+    }
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+  }, [panelWidth])
+
   return (
-    <aside className="layer-panel flex h-full w-[240px] shrink-0 flex-col border-r border-border bg-card">
+    <aside className="layer-panel relative flex h-full shrink-0 flex-col border-r border-border bg-card" style={{ width: `${panelWidth}px` }}>
+      {/* Resize handle */}
+      <div
+        className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-primary/20 active:bg-primary/30 z-10"
+        onMouseDown={handleResizeStart}
+      />
       {/* Header */}
       <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
         <Layers className="h-4 w-4 text-primary" />
@@ -287,6 +316,8 @@ export function LayerPanel() {
                   icon={LayoutList}
                   selected={isSelected(cat.id, 'cityCategory')}
                   onSelect={() => select(cat.id, 'cityCategory')}
+                  onDelete={() => { catCities.forEach((c) => removeCity(c.id)) }}
+                  deleteLabel={`Supprimer les ${catCities.length} ${cat.name.toLowerCase()} ?`}
                   indent={1}
                 >
                   {catCities.map((city) => (
@@ -361,17 +392,19 @@ export function LayerPanel() {
             ))}
           </LayerItem>
 
-          {/* Canvas */}
-          <Separator className="my-1" />
-          <LayerItem
-            id="canvas"
-            type="canvas"
-            label="Canvas"
-            icon={Layers}
-            selected={isSelected('canvas', 'canvas')}
-            onSelect={() => select('canvas', 'canvas')}
-          />
         </div>
+      </div>
+
+      {/* Canvas - sticky */}
+      <div className="border-t border-border px-1 py-1">
+        <LayerItem
+          id="canvas"
+          type="canvas"
+          label="Canvas"
+          icon={Layers}
+          selected={isSelected('canvas', 'canvas')}
+          onSelect={() => select('canvas', 'canvas')}
+        />
       </div>
 
       {/* City search panel */}
