@@ -4,19 +4,94 @@ Instructions pour Claude Code dans ce projet.
 
 ## Projet
 
-**Nom** : [À compléter]
-**Description** : [À compléter]
+**Nom** : CartoCycle
+**Description** : Éditeur graphique de cartes vectorielles (SVG/PNG) pour la production print.
+
+**Ce que CartoCycle est :**
+- Un outil de **design cartographique** pour créer des cartes visuelles, graphiques et esthétiques
+- Destiné à mettre en valeur des **itinéraires cyclables** (EuroVelo, véloroutes) ou des **régions/zones géographiques**
+- Un outil de **production print** : flyers, brochures, affiches, posts réseaux sociaux
+- Un éditeur visuel où l'utilisateur a le **contrôle total** sur chaque élément graphique (couleurs, formes, typographie, positionnement)
+
+**Ce que CartoCycle n'est PAS :**
+- Pas un outil de cartographie routière ou IGN
+- Pas un GPS ou un outil de navigation
+- Pas une carte web interactive type Google Maps / OpenStreetMap
+- Pas un outil de SIG (Système d'Information Géographique) technique
+
+**Utilisateur cible** : Corentin, marketing/digital manager à la Coordination Mutualisée des Véloroutes (CMV). Produit des supports de communication pour La Scandibérique (EuroVelo 3), La Vélodyssée (EuroVelo 1), et d'autres itinéraires. Usage local uniquement (V1).
+
+**Cas d'usage principaux :**
+1. Créer une carte d'itinéraire cyclable pour un flyer DL (100x210mm)
+2. Créer une carte régionale mettant en avant une zone traversée par un itinéraire
+3. Créer des visuels pour les réseaux sociaux (Instagram 1080x1080)
+4. Créer des cartes thématiques (itinéraire + parcs naturels, vignobles, etc.)
 
 ## Stack technique
 
-[À compléter]
+| Composant | Technologie |
+|-----------|-------------|
+| Framework | React 19 + Vite 8 |
+| Langage | TypeScript (strict) |
+| Rendu cartographique | D3.js (d3-geo, d3-shape, d3-zoom) |
+| State management | Zustand (avec undo/redo intégré) |
+| UI | shadcn/ui (base-ui) + Tailwind CSS v4 |
+| Icônes | Lucide React |
+| Données fond de carte | Natural Earth (TopoJSON, filtré Europe) |
+| Parsing GPX | @tmcw/togeojson |
+| Simplification tracé | @turf/simplify (Douglas-Peucker) |
+| Géocodage | API Nominatim (OpenStreetMap) |
+| Fonts carte | Gotham (Book, Medium, Bold, Light, Narrow, Condensed) |
+
+## Architecture
+
+**Layout** : Tri-panneaux (validé par audit Rodin)
+- Panneau gauche (240px) : arborescence des calques (LayerPanel)
+- Centre : canvas SVG (MapCanvas) avec zoom/pan D3
+- Panneau droit (300px) : propriétés contextuelles (PropertiesPanel)
+
+**Stores Zustand :**
+- `mapStore` : état du document (canvas, baseMap, routes, cities, annotations, legend) + sélection + undo/redo
+- `projectStore` : métadonnées projet (nom, sauvegarde, dirty state)
+
+**Données géographiques** : fichiers TopoJSON dans `public/data/`, filtrés pour la zone Europe (~450 Ko total)
+
+**Thèmes** : 3 thèmes CSS via `data-theme` sur `<html>` (Classique, Figma, Sombre)
 
 ## Commandes utiles
 
 ```bash
-npm run dev      # Serveur de développement
+cd cartocycle
+npm run dev      # Serveur de développement (http://localhost:5173)
 npm run build    # Build production
+npx tsc --noEmit # Vérification TypeScript seule
 ```
+
+## Principes de développement
+
+1. **Tout est paramétrable** : chaque élément visuel de la carte doit exposer tous ses paramètres dans l'UI
+2. **Rendu temps réel** : chaque modification se reflète instantanément sur le canvas
+3. **Export fidèle** : le SVG/PNG exporté doit être identique à la prévisualisation
+4. **Undo/redo sur tout** : chaque action qui modifie le document doit être annulable
+5. **Fonts Gotham** : police par défaut pour tous les textes de carte (labels, annotations, légende)
+6. **Performance** : le zoom/pan doit rester fluide même avec des tracés complexes (>10 000 points)
+
+## Bugs connus
+
+- Zoom/pan se désactive parfois après import de projet/GPX (cycle de vie D3-zoom + React)
+- Recherche de villes cachée dans les propriétés Canvas (devrait être accessible en permanence)
+
+## Fichiers clés
+
+- `src/stores/mapStore.ts` : état central du document + undo/redo
+- `src/components/MapCanvas.tsx` : rendu SVG D3 + zoom/pan
+- `src/components/LayerPanel.tsx` : panneau gauche (calques)
+- `src/components/PropertiesPanel.tsx` : panneau droit (propriétés contextuelles)
+- `src/components/RouteRenderer.tsx` : rendu d'un itinéraire (simplification + lissage)
+- `src/utils/smoothGeo.ts` : lissage Catmull-Rom des géométries
+- `src/utils/export.ts` : export SVG/PNG centralisé
+- `src/types/index.ts` : types TypeScript globaux
+- `roadmap.md` : roadmap complète avec toutes les phases et idées futures
 
 
 ---
