@@ -182,41 +182,38 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
     }
   }, [])
 
-  const renderCities = useCallback(() => {
-    return cities
-      .filter((c) => c.visible)
-      .map((city) => {
-        const category = cityCategories.find((cat) => cat.id === city.categoryId)
-        if (!category) return null
+  const renderCityItem = useCallback((city: typeof cities[0]) => {
+    const category = cityCategories.find((cat) => cat.id === city.categoryId)
+    if (!category || !city.visible) return null
 
-        const markerStyle = { ...category.markerStyle, ...city.markerOverride }
-        const labelStyle = { ...category.labelStyle, ...city.labelOverride }
-        const projected = projection(city.coordinates)
-        if (!projected) return null
+    const markerStyle = { ...category.markerStyle, ...city.markerOverride }
+    const labelStyle = { ...category.labelStyle, ...city.labelOverride }
+    const projected = projection(city.coordinates)
+    if (!projected) return null
 
-        const [x, y] = projected
-        const posOffset = getLabelOffset(city.labelAnchorPosition, labelStyle.offset)
-        const labelX = x + posOffset.x
-        const labelY = y + posOffset.y
-        const textAnchor = city.labelAnchorPosition ? posOffset.anchor : labelStyle.anchor
-        const bgColor = labelStyle.backgroundColor
-        const bgOpacity = labelStyle.backgroundOpacity ?? 0
-        const bgPad = labelStyle.backgroundPadding ?? 2
-        const showBg = bgColor && bgOpacity > 0
-        const baseline = labelStyle.baseline || 'central'
+    const [x, y] = projected
+    const posOffset = getLabelOffset(city.labelAnchorPosition, labelStyle.offset)
+    const labelX = x + posOffset.x
+    const labelY = y + posOffset.y
+    const textAnchor = city.labelAnchorPosition ? posOffset.anchor : labelStyle.anchor
+    const bgColor = labelStyle.backgroundColor
+    const bgOpacity = labelStyle.backgroundOpacity ?? 0
+    const bgPad = labelStyle.backgroundPadding ?? 2
+    const showBg = bgColor && bgOpacity > 0
+    const baseline = labelStyle.baseline || 'central'
 
-        // Text dimensions for background rect
-        const charWidth = labelStyle.fontSize * 0.55
-        const approxWidth = city.name.length * charWidth + (city.name.length - 1) * Math.max(0, labelStyle.letterSpacing)
-        const textHeight = labelStyle.fontSize
+    const charWidth = labelStyle.fontSize * 0.55
+    const approxWidth = city.name.length * charWidth + (city.name.length - 1) * Math.max(0, labelStyle.letterSpacing)
+    const textHeight = labelStyle.fontSize
 
-        // Background rect y offset depends on baseline
-        const bgYOffset = baseline === 'central' ? textHeight / 2
-          : baseline === 'hanging' ? 0
-          : textHeight * 0.8 // alphabetic/auto
+    const bgYOffset = baseline === 'central' ? textHeight / 2
+      : baseline === 'hanging' ? 0
+      : textHeight * 0.8
 
-        return (
-          <g key={city.id} className={`city-${city.id}`}>
+    const slugId = city.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+
+    return (
+      <g key={city.id} id={`ville-${slugId}`}>
             {renderMarker(x, y, markerStyle)}
             {showBg && (
               <rect
@@ -250,8 +247,24 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
             </text>
           </g>
         )
-      })
-  }, [cities, cityCategories, projection, renderMarker])
+  }, [cityCategories, projection, renderMarker])
+
+  const renderCities = useCallback(() => {
+    return (
+      <g id="villes">
+        {cityCategories.map((cat) => {
+          const catCities = cities.filter((c) => c.categoryId === cat.id)
+          if (catCities.length === 0) return null
+          const catSlug = cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+          return (
+            <g key={cat.id} id={`villes-${catSlug}`}>
+              {catCities.map((city) => renderCityItem(city))}
+            </g>
+          )
+        })}
+      </g>
+    )
+  }, [cities, cityCategories, renderCityItem])
 
   const selectedId = useMapStore((s) => s.selectedId)
   const selectElement = useMapStore((s) => s.select)
@@ -331,6 +344,7 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
         return (
           <text
             key={ann.id}
+            id={`annotation-${ann.content.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
             x={x}
             y={y}
             fontFamily={ann.style.fontFamily}
@@ -394,15 +408,28 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
       }}
     >
       <g ref={gRef}>
-        {renderLayer(data.countries, 'countries')}
-        {renderLayer(data.coastline, 'coastline')}
-        {renderLayer(data.rivers, 'rivers')}
-        {renderLayer(data.regions, 'regions')}
-        {routes.map((route) => (
-          <RouteRenderer key={route.id} route={route} projection={projection} />
-        ))}
+        {/* Fond de carte */}
+        <g id="fond-de-carte">
+          {renderLayer(data.countries, 'countries')}
+          {renderLayer(data.coastline, 'coastline')}
+          {renderLayer(data.rivers, 'rivers')}
+          {renderLayer(data.regions, 'regions')}
+        </g>
+
+        {/* Itinéraires */}
+        <g id="itineraires">
+          {routes.map((route) => (
+            <RouteRenderer key={route.id} route={route} projection={projection} />
+          ))}
+        </g>
+
+        {/* Villes */}
         {renderCities()}
-        {renderAnnotations()}
+
+        {/* Annotations */}
+        <g id="annotations">
+          {renderAnnotations()}
+        </g>
       </g>
     </svg>
   )

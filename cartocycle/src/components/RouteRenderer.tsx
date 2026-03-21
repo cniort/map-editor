@@ -68,7 +68,7 @@ export function RouteRenderer({ route, projection }: RouteRendererProps) {
   const filterId = `shadow-${route.id}`
 
   return (
-    <g className={`route-${route.id}`}>
+    <g id={`itineraire-${route.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>
       {shadow?.enabled && (
         <defs>
           <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
