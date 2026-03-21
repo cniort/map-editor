@@ -63,25 +63,15 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 
 ---
 
-## Bugs connus [A CORRIGER]
+## Bugs résolus
 
-### BUG PRIORITAIRE : Zoom/pan cassé après import
-
-- [ ] Le zoom et le pan se désactivent parfois après import d'un projet ou d'un GPX
-- [ ] Cause probable : le useEffect D3-zoom ne se ré-attache pas systématiquement après loadState
-- [ ] Investigation : forcer un re-mount du SVG via une clé React, ou ré-initialiser le zoom behavior dans loadState
-- [ ] Lié au mélange D3 impératif / React déclaratif identifié par Rodin
-
-### UX PRIORITAIRE : Recherche de villes inaccessible
-
-- [ ] La recherche géocodée (Nominatim) est actuellement cachée dans les propriétés "Canvas" — il faut cliquer sur Canvas pour y accéder, ce qui n'est pas intuitif
-- [ ] Solution : déplacer la recherche de villes dans le panneau gauche (LayerPanel), sous la section "Villes", toujours visible
-- [ ] Ou ajouter un bouton "+ Ville" en bas du LayerPanel (comme "+ Itinéraire" et "+ Texte") qui ouvre un petit formulaire de recherche intégré
-- [ ] La recherche doit être accessible en permanence sans avoir à changer de contexte de sélection
+- [x] Zoom/pan après import → _stateVersion incrémenté dans loadState/addRoute, force ré-attachement D3-zoom
+- [x] Recherche de villes → bouton "+ Ville" dans le LayerPanel avec recherche Nominatim intégrée
+- [x] Clic sur zone vide du canvas → sélectionne Canvas (affiche propriétés générales)
 
 ---
 
-## Phase 4 — Interactions directes et UX avancée [A FAIRE]
+## Phase 4 — Interactions directes et UX avancée [TERMINEE]
 
 ### 4.1 Drag & drop sur la carte (PRIORITE HAUTE)
 
@@ -127,7 +117,7 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 
 ---
 
-## Phase 5 — Page Paramètres étendue [A FAIRE]
+## Phase 5 — Page Paramètres étendue [TERMINEE]
 
 ### 5.1 Paramètres d'interface
 
@@ -147,7 +137,7 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 
 ---
 
-## Phase 6 — Conversion unités et export print-ready [A FAIRE]
+## Phase 6 — Conversion unités et export print-ready [TERMINEE]
 
 ### 6.1 Système de conversion mm/pixels
 
@@ -162,7 +152,7 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 
 ---
 
-## Phase 7 — Fonctionnalités éditeur graphique pro [A FAIRE]
+## Phase 7 — Fonctionnalités éditeur graphique pro [EN COURS]
 
 ### 7.1 Presets de style / looks de carte
 
