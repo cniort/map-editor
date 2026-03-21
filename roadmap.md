@@ -82,30 +82,38 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 
 ## Phase 4 — Interactions directes et UX avancée [TERMINEE]
 
-### 4.1 Drag & drop sur la carte (PRIORITE HAUTE)
+### 4.1 Drag & drop et positionnement
 
-- [x] Annotations texte déplaçables par clic-glisser — FAIT
-- [ ] Labels de villes déplaçables indépendamment du marqueur
+- [x] Annotations texte déplaçables par clic-glisser
+- [x] Repositionnement labels de villes (8 positions N/NE/E/SE/S/SO/O/NO)
+- [x] Slider distance label-point configurable
+- [x] Épaisseur contour marqueur configurable
+- [ ] Labels de villes déplaçables librement par drag
 - [ ] Trait de rappel (leader line) quand un label est éloigné de son point
-- [ ] Curseur contextuel (move/crosshair) au survol des éléments interactifs
 - [ ] Mode sélection vs mode pan (toggle dans la toolbar)
 
-### 4.2 Prévisualisation du format print (PRIORITE HAUTE)
+### 4.2 Prévisualisation du format print
 
-- [ ] Rectangle aux proportions du format choisi affiché sur le canvas
-- [ ] Zone hors format assombrie (masque de découpe)
+- [x] Rectangle aux proportions du format choisi affiché sur le canvas
+- [x] Zone hors format assombrie (masque de découpe)
+- [x] Toggle on/off par reclic sur le format actif
 - [ ] Le canvas de travail respecte les proportions du format de sortie
 
 ### 4.3 Barre d'échelle kilométrique
 
-- [ ] Barre d'échelle SVG calculée dynamiquement depuis la projection
+- [x] Barre d'échelle SVG calculée dynamiquement depuis la projection
 - [ ] Position et style configurables
 
 ### 4.4 Légende auto-générée
 
-- [ ] Génération depuis les tracés et catégories visibles
-- [ ] Position configurable (drag & drop)
-- [ ] Style du cadre configurable
+- [x] Génération automatique depuis les itinéraires et catégories de villes visibles
+- [x] Position configurable (X/Y + largeur)
+- [x] Style du cadre configurable (fond, opacité, bordure, arrondi, padding)
+- [x] Typographie configurable (police, taille, couleur, taille titre)
+- [x] Toggle visibilité dans le panneau calques
+- [x] Panneau propriétés dédié
+- [x] Exportée dans le SVG (groupe id="legende")
+- [ ] Drag & drop de la légende sur le canvas
 
 ### 4.5 Gestion du z-index dans l'UI
 
@@ -130,19 +138,31 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 
 ### 5.1 Paramètres d'interface
 
-- [ ] Taille d'interface : Standard / Grande (augmente taille typos, boutons, paddings globalement)
-- [ ] Panneaux flottants style Figma (padding autour, radius, ombre légère, pas collés aux bords)
-- [ ] Mode panneau : collé (actuel) vs flottant (style Figma récent)
+- [x] Taille d'interface : Standard / Grande
+- [x] Panneaux flottants style Figma (padding, radius, ombre)
+- [x] Mode panneau : Ancré vs Flottant dans les paramètres
+- [x] 3 thèmes : Classique, Figma, Sombre
 - [ ] Intervalle d'autosave configurable
 - [ ] Nombre max d'undo configurable
 - [ ] Couleurs favorites / presets
 
 ### 5.2 Refonte visuelle
 
-- [ ] Remplacer les select natifs par des composants shadcn/ui cohérents
-- [ ] Scale typographique documentée
-- [ ] Espacement standardisé
-- [ ] Icônes Lucide pour toutes les actions (supprimer = Trash2, etc.)
+- [x] 12 select natifs remplacés par shadcn Select (SimpleSelect)
+- [x] 3 checkboxes remplacées par shadcn Switch
+- [x] Audit UI complet + harmonisation tailles/paddings/alignements
+- [x] Icônes Lucide pour toutes les actions
+- [x] Animation slide panneaux en mode plein écran
+- [ ] Modale SettingsDialog → shadcn Dialog
+
+### 5.3 Export SVG structuré
+
+- [x] Groupes nommés par type (fond-de-carte, itineraires, villes, annotations, legende)
+- [x] Villes groupées par catégorie (villes-ville-principale, villes-ville-etape)
+- [x] Chaque ville = groupe avec marqueur + label (déplaçable dans Illustrator)
+- [x] Chaque itinéraire nommé (id="itineraire-la-scandiberique")
+- [x] Annotations nommées (id="annotation-france")
+- [x] Polices Gotham embarquées via @font-face
 
 ---
 
