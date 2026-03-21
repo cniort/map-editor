@@ -642,7 +642,7 @@ export function PropertiesPanel() {
   }
 
   return (
-    <aside className="flex h-full w-[300px] shrink-0 flex-col border-l border-border bg-card/50">
+    <aside className="properties-panel flex h-full w-[300px] shrink-0 flex-col border-l border-border bg-card">
       <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
         <Settings2 className="h-4 w-4 text-primary" />
         <span className="text-xs font-bold tracking-tight">

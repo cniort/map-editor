@@ -221,6 +221,48 @@ body {
   background: transparent;
 }
 
+/* === UI Size: Large === */
+[data-ui-size="large"] {
+  font-size: 15px;
+}
+[data-ui-size="large"] .layer-panel,
+[data-ui-size="large"] .properties-panel {
+  font-size: 14px;
+}
+[data-ui-size="large"] button {
+  min-height: 32px;
+}
+
+/* === Panel Mode: Floating === */
+[data-panel-mode="floating"] .layer-panel {
+  margin: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  height: calc(100% - 16px);
+}
+[data-panel-mode="floating"] .properties-panel {
+  margin: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  height: calc(100% - 16px);
+}
+[data-panel-mode="floating"] .layer-panel {
+  border-right: 1px solid var(--border);
+}
+[data-panel-mode="floating"] .properties-panel {
+  border-left: 1px solid var(--border);
+}
+
+/* Dark floating shadows */
+[data-theme="figma"][data-panel-mode="floating"] .layer-panel,
+[data-theme="figma"][data-panel-mode="floating"] .properties-panel,
+[data-theme="phototech"][data-panel-mode="floating"] .layer-panel,
+[data-theme="phototech"][data-panel-mode="floating"] .properties-panel {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
 /* Smooth theme transitions */
 html {
   transition: background-color 0.2s ease, color 0.2s ease;

@@ -188,7 +188,7 @@ export function LayerPanel() {
   }
 
   return (
-    <aside className="flex h-full w-[240px] shrink-0 flex-col border-r border-border bg-card/50">
+    <aside className="layer-panel flex h-full w-[240px] shrink-0 flex-col border-r border-border bg-card">
       {/* Header */}
       <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
         <Layers className="h-4 w-4 text-primary" />

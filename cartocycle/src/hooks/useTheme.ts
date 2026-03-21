@@ -1,33 +1,40 @@
 import { useState, useEffect } from 'react'
 
 export type ThemeId = 'default' | 'figma' | 'phototech'
+export type UiSize = 'standard' | 'large'
+export type PanelMode = 'docked' | 'floating'
 
-const STORAGE_KEY = 'cartocycle-theme'
-
-const THEME_LABELS: Record<ThemeId, string> = {
-  default: 'Classique',
-  figma: 'Figma',
-  phototech: 'Sombre',
-}
+const STORAGE_THEME = 'cartocycle-theme'
+const STORAGE_SIZE = 'cartocycle-ui-size'
+const STORAGE_PANEL = 'cartocycle-panel-mode'
 
 export function useTheme() {
-  const [theme, setThemeState] = useState<ThemeId>(() => {
-    return (localStorage.getItem(STORAGE_KEY) as ThemeId) || 'default'
-  })
+  const [theme, setThemeState] = useState<ThemeId>(() =>
+    (localStorage.getItem(STORAGE_THEME) as ThemeId) || 'default'
+  )
+  const [uiSize, setUiSizeState] = useState<UiSize>(() =>
+    (localStorage.getItem(STORAGE_SIZE) as UiSize) || 'standard'
+  )
+  const [panelMode, setPanelModeState] = useState<PanelMode>(() =>
+    (localStorage.getItem(STORAGE_PANEL) as PanelMode) || 'docked'
+  )
 
   useEffect(() => {
     const root = document.documentElement
     root.setAttribute('data-theme', theme)
-    localStorage.setItem(STORAGE_KEY, theme)
-  }, [theme])
+    root.setAttribute('data-ui-size', uiSize)
+    root.setAttribute('data-panel-mode', panelMode)
+    localStorage.setItem(STORAGE_THEME, theme)
+    localStorage.setItem(STORAGE_SIZE, uiSize)
+    localStorage.setItem(STORAGE_PANEL, panelMode)
+  }, [theme, uiSize, panelMode])
 
-  const setTheme = (t: ThemeId) => setThemeState(t)
-
-  const cycleTheme = () => {
-    const themes: ThemeId[] = ['default', 'figma', 'phototech']
-    const idx = themes.indexOf(theme)
-    setTheme(themes[(idx + 1) % themes.length])
+  return {
+    theme,
+    setTheme: (t: ThemeId) => setThemeState(t),
+    uiSize,
+    setUiSize: (s: UiSize) => setUiSizeState(s),
+    panelMode,
+    setPanelMode: (m: PanelMode) => setPanelModeState(m),
   }
-
-  return { theme, setTheme, cycleTheme, label: THEME_LABELS[theme] }
 }
