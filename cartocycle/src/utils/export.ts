@@ -1,20 +1,55 @@
 import type { CanvasConfig } from '@/types'
 
-export function exportSvg(projectName: string, canvas: CanvasConfig) {
+function getGothamFontFaces(): string {
+  // Embed font references for SVG export
+  // In a production app, these would be base64-encoded. For now, reference the font files.
+  return `
+    <style>
+      @font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Light.otf'); font-weight: 300; font-style: normal; }
+      @font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Book.otf'); font-weight: 400; font-style: normal; }
+      @font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Medium.otf'); font-weight: 500; font-style: normal; }
+      @font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Bold.otf'); font-weight: 700; font-style: normal; }
+      @font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Black.otf'); font-weight: 900; font-style: normal; }
+      @font-face { font-family: 'Gotham Narrow'; src: url('/fonts/GothamNarrow-Book.otf'); font-weight: 400; }
+      @font-face { font-family: 'Gotham Narrow'; src: url('/fonts/GothamNarrow-Medium.otf'); font-weight: 500; }
+      @font-face { font-family: 'Gotham Narrow'; src: url('/fonts/GothamNarrow-Bold.otf'); font-weight: 700; }
+      @font-face { font-family: 'Gotham Condensed'; src: url('/fonts/GothamCond-Book.otf'); font-weight: 400; }
+      @font-face { font-family: 'Gotham Condensed'; src: url('/fonts/GothamCond-Medium.otf'); font-weight: 500; }
+      @font-face { font-family: 'Gotham Condensed'; src: url('/fonts/GothamCond-Bold.otf'); font-weight: 700; }
+    </style>
+  `
+}
+
+function prepareExportSvg(_canvas: CanvasConfig): SVGSVGElement | null {
   const mainSvg = document.querySelector('.map-canvas-container svg') as SVGSVGElement | null
-  if (!mainSvg) return
+  if (!mainSvg) return null
 
   const clone = mainSvg.cloneNode(true) as SVGSVGElement
 
-  // Remove D3 zoom transform from the inner <g> so export reflects the original projection
+  // Remove D3 zoom transform
   const innerG = clone.querySelector('g')
-  if (innerG) {
-    innerG.removeAttribute('transform')
-  }
+  if (innerG) innerG.removeAttribute('transform')
+
+  // Get the original viewBox dimensions
+  const viewBox = mainSvg.getAttribute('viewBox')
+
+  // Set proper SVG attributes for export
+  clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+  if (viewBox) clone.setAttribute('viewBox', viewBox)
+
+  // Embed font declarations
+  const defsEl = clone.querySelector('defs') || clone.insertBefore(document.createElementNS('http://www.w3.org/2000/svg', 'defs'), clone.firstChild)
+  defsEl.innerHTML = getGothamFontFaces() + defsEl.innerHTML
+
+  return clone
+}
+
+export function exportSvg(projectName: string, canvas: CanvasConfig) {
+  const clone = prepareExportSvg(canvas)
+  if (!clone) return
 
   clone.setAttribute('width', `${canvas.widthMm}mm`)
   clone.setAttribute('height', `${canvas.heightMm}mm`)
-  clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
 
   const serializer = new XMLSerializer()
   const svgString = '<?xml version="1.0" encoding="UTF-8"?>\n' + serializer.serializeToString(clone)
@@ -28,15 +63,11 @@ export function exportPng(
   dpi: number,
   transparentBg: boolean
 ) {
-  const mainSvg = document.querySelector('.map-canvas-container svg') as SVGSVGElement | null
-  if (!mainSvg) return
+  const clone = prepareExportSvg(canvas)
+  if (!clone) return
 
   const pxWidth = Math.round((canvas.widthMm / 25.4) * dpi)
   const pxHeight = Math.round((canvas.heightMm / 25.4) * dpi)
-
-  const clone = mainSvg.cloneNode(true) as SVGSVGElement
-  const innerG = clone.querySelector('g')
-  if (innerG) innerG.removeAttribute('transform')
 
   clone.setAttribute('width', String(pxWidth))
   clone.setAttribute('height', String(pxHeight))
