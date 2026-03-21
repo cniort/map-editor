@@ -20,9 +20,7 @@ import {
   Save,
   Map,
   Settings,
-  Pipette,
 } from 'lucide-react'
-import { useUiStore } from '@/stores/uiStore'
 
 function ToolbarButton({
   icon: Icon,
@@ -63,8 +61,6 @@ export function Toolbar({ fullscreen, onToggleFullscreen }: { fullscreen: boolea
   const isDirty = useProjectStore((s) => s.isDirty)
   const saveToFile = useProjectStore((s) => s.saveToFile)
   const [settingsOpen, setSettingsOpen] = useState(false)
-  const eyedropperActive = useUiStore((s) => s.eyedropperActive)
-  const toggleEyedropper = useUiStore((s) => s.toggleEyedropper)
 
   return (
     <>
@@ -97,16 +93,6 @@ export function Toolbar({ fullscreen, onToggleFullscreen }: { fullscreen: boolea
           label={canvas.locked ? 'Déverrouiller le cadrage' : 'Verrouiller le cadrage'}
           onClick={toggleLock}
           active={canvas.locked}
-        />
-
-        <Separator orientation="vertical" className="mx-1.5 h-5" />
-
-        {/* Eyedropper */}
-        <ToolbarButton
-          icon={Pipette}
-          label="Pipette couleur (I)"
-          onClick={toggleEyedropper}
-          active={eyedropperActive}
         />
 
         <Separator orientation="vertical" className="mx-1.5 h-5" />
