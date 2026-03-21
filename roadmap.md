@@ -162,6 +162,45 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 
 ---
 
+## Phase 7 — Fonctionnalités éditeur graphique pro [A FAIRE]
+
+### 7.1 Presets de style / looks de carte
+
+- [ ] Sauvegarder un "look" complet : palette de couleurs + épaisseurs + typographie + lissage
+- [ ] Presets intégrés : "Scandibérique" (rouge, Gotham Bold, France gris foncé), "Vélodyssée" (bleu, style côtier), "Neutre" (gris, minimaliste)
+- [ ] Appliquer un preset en un clic pour changer tout le style de la carte
+- [ ] Créer et sauvegarder ses propres presets
+- [ ] Accélérer la production en série (même itinéraire, plusieurs styles)
+
+### 7.2 Mode présentation et mockups
+
+- [ ] Mode plein écran : masquer les panneaux pour voir la carte seule
+- [ ] Intégration dans des mockups prédéfinis :
+  - Slide PowerPoint 16/9 (1920x1080) avec titre, sous-titre, logo
+  - Publication Instagram carrée (1080x1080) avec bandeau titre
+  - Publication Instagram portrait (1080x1350) avec zone texte
+  - Story Instagram (1080x1920)
+  - Format flyer DL avec zones texte et logo
+- [ ] Chaque mockup superpose des éléments (titres, logos, cadres) au-dessus de la carte
+- [ ] Export du mockup complet (carte + éléments superposés) en PNG/SVG
+- [ ] Bibliothèque de mockups personnalisables
+
+### 7.3 Pipette / color picker depuis la carte
+
+- [ ] Cliquer sur un élément de la carte pour récupérer sa couleur
+- [ ] Raccourci clavier (ex: I) pour activer le mode pipette
+- [ ] Affichage du code hex de la couleur survolée
+
+### 7.4 Repositionnement libre des labels de villes
+
+- [ ] Par défaut : le label est positionné selon l'offset défini dans la catégorie (ex: à droite du point)
+- [ ] L'utilisateur peut repositionner le label tout autour du point (8 positions : N, NE, E, SE, S, SO, O, NO)
+- [ ] La distance au point reste la même (définie par l'offset de la catégorie), seul l'angle change
+- [ ] Interface : clic sur le label ou sur un sélecteur de position (8 boutons en cercle) dans les propriétés de la ville
+- [ ] Override individuel par ville, sans modifier la catégorie
+
+---
+
 ## V2 — Évolutions futures
 
 ### Datasets custom
