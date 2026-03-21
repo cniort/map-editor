@@ -25,12 +25,10 @@ export function ColorPicker({ label, value, onChange }: ColorPickerProps) {
       <Label className="w-20 shrink-0 text-xs">{label}</Label>
       <div className="flex items-center gap-1.5">
         <Popover>
-          <PopoverTrigger>
-            <button
-              className="h-6 w-6 shrink-0 rounded border border-border"
-              style={{ backgroundColor: value }}
-            />
-          </PopoverTrigger>
+          <PopoverTrigger
+            className="h-6 w-6 shrink-0 rounded border border-border cursor-pointer"
+            style={{ backgroundColor: value }}
+          />
           <PopoverContent className="w-auto p-3" align="start">
             <input
               type="color"
