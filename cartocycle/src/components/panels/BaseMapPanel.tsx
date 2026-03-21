@@ -67,7 +67,7 @@ export function BaseMapPanel() {
                 <Label className="text-xs font-semibold">
                   {LAYER_LABELS[layer.id] || layer.id}
                 </Label>
-                <p className="text-[10px] text-muted-foreground">
+                <p className="text-[11px] text-muted-foreground">
                   {LAYER_DESCRIPTIONS[layer.id]}
                 </p>
               </div>
@@ -131,7 +131,7 @@ export function BaseMapPanel() {
                 {layer.id === 'countries' && (
                   <div className="space-y-2 pt-1">
                     <Separator />
-                    <Label className="text-[10px] font-semibold text-muted-foreground">France</Label>
+                    <Label className="text-[11px] font-semibold text-muted-foreground">France</Label>
                     <ColorPicker
                       label="Remplissage"
                       value={layer.countryOverrides?.FRA?.fill || layer.style.fill}
@@ -162,7 +162,7 @@ export function BaseMapPanel() {
                             const currentFill = override?.fill || layer.style.fill
                             return (
                               <div key={country.code} className="flex items-center gap-2">
-                                <span className="w-24 truncate text-[10px]" title={country.name}>
+                                <span className="w-24 truncate text-[11px]" title={country.name}>
                                   {country.name}
                                 </span>
                                 <input

@@ -89,7 +89,7 @@ export function ExportPanel() {
                 key={p.label}
                 variant={canvas.widthMm === p.width && canvas.heightMm === p.height ? 'default' : 'outline'}
                 size="sm"
-                className="h-7 text-[10px]"
+                className="h-7 text-[11px]"
                 onClick={() => handlePreset(p)}
               >
                 {p.label}
@@ -151,7 +151,7 @@ export function ExportPanel() {
                   ))}
                 </select>
               </div>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-[11px] text-muted-foreground">
                 Taille : {pxWidth.toLocaleString()} x {pxHeight.toLocaleString()} px
               </p>
               <label className="flex items-center gap-2 text-xs">

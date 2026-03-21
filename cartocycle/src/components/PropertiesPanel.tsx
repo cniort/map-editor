@@ -249,7 +249,7 @@ function LayerProperties({ layerId }: { layerId: string }) {
               {countryList.filter((c) => c.code !== 'FRA').map((country) => (
                 <div key={country.code} className="flex items-center gap-2">
                   <span className="w-20 truncate text-[11px]">{country.name}</span>
-                  <input type="color" value={layer.countryOverrides?.[country.code]?.fill || layer.style.fill} onChange={(e) => setCountryOverride(layerId, country.code, { fill: e.target.value })} className="h-4 w-4 cursor-pointer border-0 p-0" />
+                  <input type="color" value={layer.countryOverrides?.[country.code]?.fill || layer.style.fill} onChange={(e) => setCountryOverride(layerId, country.code, { fill: e.target.value })} className="h-5 w-5 cursor-pointer rounded border-0 p-0" />
                 </div>
               ))}
             </div>
@@ -371,7 +371,7 @@ function CityProperties({ cityId }: { cityId: string }) {
             return (
               <button
                 key={pos}
-                className={`h-7 w-7 rounded text-[9px] font-medium transition-colors ${
+                className={`h-7 w-7 rounded text-[10px] font-medium transition-colors ${
                   isActive ? 'bg-primary text-primary-foreground' : 'border border-border hover:bg-accent'
                 }`}
                 onClick={() => updateCity(cityId, { labelAnchorPosition: pos })}
@@ -629,10 +629,10 @@ function AddCitySection() {
       </select>
 
       <div className="flex gap-1">
-        <Button variant="outline" size="sm" className="flex-1 h-6 text-[11px]" onClick={() => setShowManual(!showManual)}>
+        <Button variant="outline" size="sm" className="flex-1 h-7 text-xs" onClick={() => setShowManual(!showManual)}>
           Saisie manuelle
         </Button>
-        <Button variant="outline" size="sm" className="flex-1 h-6 text-[11px]" onClick={handleCsvImport}>
+        <Button variant="outline" size="sm" className="flex-1 h-7 text-xs" onClick={handleCsvImport}>
           Import CSV
         </Button>
       </div>

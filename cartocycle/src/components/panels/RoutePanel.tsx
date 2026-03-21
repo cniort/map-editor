@@ -151,7 +151,7 @@ export function RoutePanel() {
             {route.visible && (
               <div className="space-y-2">
                 {/* Points count */}
-                <p className="text-[10px] text-muted-foreground">
+                <p className="text-[11px] text-muted-foreground">
                   {getPointCount(route).toLocaleString()} points originaux
                 </p>
 

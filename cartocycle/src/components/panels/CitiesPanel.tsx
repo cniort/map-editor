@@ -165,7 +165,7 @@ export function CitiesPanel() {
             onChange={(e) => handleSearch(e.target.value)}
             className="h-7 text-xs"
           />
-          {searching && <p className="text-[10px] text-muted-foreground">Recherche...</p>}
+          {searching && <p className="text-[11px] text-muted-foreground">Recherche...</p>}
           {searchResults.length > 0 && (
             <div className="rounded border border-border bg-popover">
               {searchResults.map((r, i) => (
@@ -222,7 +222,7 @@ export function CitiesPanel() {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label className="text-xs font-semibold">Catégories</Label>
-            <Button variant="ghost" size="sm" className="h-6 text-[10px]" onClick={handleAddCategory}>
+            <Button variant="ghost" size="sm" className="h-6 text-[11px]" onClick={handleAddCategory}>
               + Ajouter
             </Button>
           </div>
@@ -238,7 +238,7 @@ export function CitiesPanel() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-5 px-1 text-[10px]"
+                  className="h-5 px-1 text-[11px]"
                   onClick={() => setExpandedCategory(expandedCategory === cat.id ? null : cat.id)}
                 >
                   {expandedCategory === cat.id ? 'Fermer' : 'Config'}
@@ -247,7 +247,7 @@ export function CitiesPanel() {
 
               {expandedCategory === cat.id && (
                 <div className="mt-2 space-y-2">
-                  <Label className="text-[10px] font-medium text-muted-foreground">Marqueur</Label>
+                  <Label className="text-[11px] font-medium text-muted-foreground">Marqueur</Label>
                   <div className="flex items-center gap-2">
                     <Label className="w-20 shrink-0 text-xs">Forme</Label>
                     <select
@@ -264,7 +264,7 @@ export function CitiesPanel() {
 
                   <Separator />
 
-                  <Label className="text-[10px] font-medium text-muted-foreground">Label</Label>
+                  <Label className="text-[11px] font-medium text-muted-foreground">Label</Label>
                   <div className="flex items-center gap-2">
                     <Label className="w-20 shrink-0 text-xs">Police</Label>
                     <select
@@ -318,7 +318,7 @@ export function CitiesPanel() {
             Villes ({cities.length})
           </Label>
           {cities.length === 0 ? (
-            <p className="text-[10px] text-muted-foreground">Aucune ville ajoutée</p>
+            <p className="text-[11px] text-muted-foreground">Aucune ville ajoutée</p>
           ) : (
             cities.map((city) => (
                 <div key={city.id} className="space-y-1 rounded border border-border px-2 py-1.5">
@@ -327,7 +327,7 @@ export function CitiesPanel() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-5 shrink-0 px-1.5 text-[10px] text-destructive"
+                      className="h-5 shrink-0 px-1.5 text-[11px] text-destructive"
                       onClick={() => removeCity(city.id)}
                     >
                       x
@@ -336,7 +336,7 @@ export function CitiesPanel() {
                   <select
                     value={city.categoryId}
                     onChange={(e) => updateCity(city.id, { categoryId: e.target.value })}
-                    className="h-6 w-full rounded border border-input bg-background px-1 text-[10px]"
+                    className="h-6 w-full rounded border border-input bg-background px-1 text-[11px]"
                   >
                     {cityCategories.map((cat) => (
                       <option key={cat.id} value={cat.id}>{cat.name}</option>

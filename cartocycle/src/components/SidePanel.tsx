@@ -17,7 +17,7 @@ export function SidePanel() {
         </div>
         <div>
           <h1 className="text-sm font-bold tracking-tight text-foreground">CartoCycle</h1>
-          <p className="text-[10px] leading-tight text-muted-foreground">Éditeur de cartes vectorielles</p>
+          <p className="text-[11px] leading-tight text-muted-foreground">Éditeur de cartes vectorielles</p>
         </div>
       </div>
 
