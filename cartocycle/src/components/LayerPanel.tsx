@@ -1,9 +1,11 @@
-import { useCallback } from 'react'
+import { useCallback, useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useMapStore, type SelectionType } from '@/stores/mapStore'
 import { gpx } from '@tmcw/togeojson'
-import type { RouteConfig, RouteStyle, TextAnnotation } from '@/types'
+import { searchCity, type GeocodingResult } from '@/utils/geocode'
+import type { RouteConfig, RouteStyle, TextAnnotation, CityConfig } from '@/types'
+import { Input } from '@/components/ui/input'
 import {
   Eye,
   EyeOff,
@@ -16,8 +18,8 @@ import {
   Plus,
   ChevronDown,
   ChevronRight,
+  Search,
 } from 'lucide-react'
-import { useState } from 'react'
 
 interface LayerItemProps {
   id: string
@@ -85,6 +87,35 @@ export function LayerPanel() {
   const updateRoute = useMapStore((s) => s.updateRoute)
   const addRoute = useMapStore((s) => s.addRoute)
   const addAnnotation = useMapStore((s) => s.addAnnotation)
+  const addCity = useMapStore((s) => s.addCity)
+
+  const [showCitySearch, setShowCitySearch] = useState(false)
+  const [cityQuery, setCityQuery] = useState('')
+  const [cityResults, setCityResults] = useState<GeocodingResult[]>([])
+  const [citySearching, setCitySearching] = useState(false)
+  const cityTimeout = useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  const handleCitySearch = useCallback((q: string) => {
+    setCityQuery(q)
+    if (cityTimeout.current) clearTimeout(cityTimeout.current)
+    if (q.length < 2) { setCityResults([]); return }
+    setCitySearching(true)
+    cityTimeout.current = setTimeout(async () => {
+      const r = await searchCity(q)
+      setCityResults(r)
+      setCitySearching(false)
+    }, 500)
+  }, [])
+
+  const handleCitySelect = (r: GeocodingResult) => {
+    const defaultCat = cityCategories[0]?.id || 'main'
+    const city: CityConfig = { id: crypto.randomUUID(), name: r.name, coordinates: [r.lon, r.lat], categoryId: defaultCat, visible: true }
+    addCity(city)
+    select(city.id, 'city')
+    setCityQuery('')
+    setCityResults([])
+    setShowCitySearch(false)
+  }
 
   const isSelected = (id: string, type: SelectionType) => selectedId === id && selectedType === type
 
@@ -293,10 +324,39 @@ export function LayerPanel() {
         </div>
       </div>
 
+      {/* City search panel */}
+      {showCitySearch && (
+        <div className="border-t border-border p-2 space-y-1.5">
+          <div className="relative">
+            <Search className="absolute left-2 top-1.5 h-3.5 w-3.5 text-muted-foreground" />
+            <Input
+              placeholder="Rechercher une ville..."
+              value={cityQuery}
+              onChange={(e) => handleCitySearch(e.target.value)}
+              className="pl-7"
+              autoFocus
+            />
+          </div>
+          {citySearching && <p className="text-[11px] text-muted-foreground px-1">Recherche...</p>}
+          {cityResults.length > 0 && (
+            <div className="rounded border border-border bg-popover max-h-40 overflow-y-auto">
+              {cityResults.map((r, i) => (
+                <button key={i} className="w-full px-2 py-1.5 text-left text-xs hover:bg-accent truncate" onClick={() => handleCitySelect(r)}>
+                  {r.displayName}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Actions */}
       <div className="flex gap-1 border-t border-border p-2">
         <Button variant="ghost" size="sm" className="h-7 flex-1 text-[11px]" onClick={handleImportRoute}>
           <Plus className="mr-1 h-3 w-3" /> Itinéraire
+        </Button>
+        <Button variant="ghost" size="sm" className="h-7 flex-1 text-[11px]" onClick={() => setShowCitySearch(!showCitySearch)}>
+          <MapPin className="mr-1 h-3 w-3" /> Ville
         </Button>
         <Button variant="ghost" size="sm" className="h-7 flex-1 text-[11px]" onClick={handleAddAnnotation}>
           <Plus className="mr-1 h-3 w-3" /> Texte

@@ -48,6 +48,7 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
   const cities = useMapStore((s) => s.cities)
   const cityCategories = useMapStore((s) => s.cityCategories)
   const annotations = useMapStore((s) => s.annotations)
+  const stateVersion = useMapStore((s) => s._stateVersion)
   const { data, loading } = useGeoData()
 
   const projection = useProjection({
@@ -87,7 +88,7 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
     return () => {
       svg.on('.zoom', null)
     }
-  }, [canvas.locked, canvas.projection.type, canvas.projection.scale])
+  }, [canvas.locked, canvas.projection.type, canvas.projection.scale, stateVersion])
 
   const renderLayer = useCallback(
     (fc: FeatureCollection | null, layerId: string) => {

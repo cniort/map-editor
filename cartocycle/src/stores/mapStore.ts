@@ -189,7 +189,7 @@ function extractMapState(store: MapState): MapState {
   }
 }
 
-type StoreState = MapState & SelectionState & HistoryState & MapActions
+type StoreState = MapState & SelectionState & HistoryState & MapActions & { _stateVersion: number }
 
 // === Store ===
 export const useMapStore = create<StoreState>()((set, get) => {
@@ -204,6 +204,7 @@ export const useMapStore = create<StoreState>()((set, get) => {
     ...structuredClone(defaultState),
     selectedId: null,
     selectedType: null,
+    _stateVersion: 0,
     _past: [],
     _future: [],
     canUndo: false,
@@ -277,7 +278,7 @@ export const useMapStore = create<StoreState>()((set, get) => {
     },
 
     // Routes
-    addRoute: (route) => { pushHistory(); set({ routes: [...get().routes, route] }) },
+    addRoute: (route) => { pushHistory(); set({ routes: [...get().routes, route], _stateVersion: get()._stateVersion + 1 }) },
     removeRoute: (routeId) => { pushHistory(); set({ routes: get().routes.filter((r) => r.id !== routeId) }) },
     updateRoute: (routeId, update) => { pushHistory(); set({ routes: get().routes.map((r) => r.id === routeId ? { ...r, ...update } : r) }) },
     updateRouteStyle: (routeId, style) => {
@@ -308,7 +309,7 @@ export const useMapStore = create<StoreState>()((set, get) => {
     removeAnnotation: (id) => { pushHistory(); set({ annotations: get().annotations.filter((a) => a.id !== id) }) },
 
     // Full state load
-    loadState: (state) => { pushHistory(); set(state) },
+    loadState: (state) => { pushHistory(); set({ ...state, _stateVersion: get()._stateVersion + 1 }) },
 
     // Undo/Redo
     undo: () => {
