@@ -83,8 +83,11 @@ function App() {
   return (
     <div className="flex h-full w-full flex-col bg-background">
       <Toolbar fullscreen={fullscreen} onToggleFullscreen={() => setFullscreen((f) => !f)} />
-      <div className="flex flex-1 overflow-hidden">
-        <div className={`transition-all duration-300 ease-in-out overflow-hidden ${fullscreen ? 'w-0 opacity-0' : 'opacity-100'}`} style={{ minWidth: fullscreen ? 0 : undefined }}>
+      <div className="relative flex flex-1 overflow-hidden">
+        <div
+          className="shrink-0 transition-[margin] duration-300 ease-in-out"
+          style={{ marginLeft: fullscreen ? '-300px' : '0px' }}
+        >
           <LayerPanel />
         </div>
         <main
@@ -99,7 +102,10 @@ function App() {
             </>
           )}
         </main>
-        <div className={`transition-all duration-300 ease-in-out overflow-hidden ${fullscreen ? 'w-0 opacity-0' : 'opacity-100'}`} style={{ minWidth: fullscreen ? 0 : undefined }}>
+        <div
+          className="shrink-0 transition-[margin] duration-300 ease-in-out"
+          style={{ marginRight: fullscreen ? '-300px' : '0px' }}
+        >
           <PropertiesPanel />
         </div>
       </div>

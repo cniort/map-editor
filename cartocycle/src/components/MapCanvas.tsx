@@ -79,11 +79,15 @@ export function MapCanvas({ width, height }: MapCanvasProps) {
 
     zoomBehaviorRef = zoomBehavior
 
+    // Always attach zoom behavior (required for programmatic zoom)
+    svg.call(zoomBehavior)
+
     if (canvas.locked) {
-      // Keep zoom behavior ref for buttons but disable mouse/touch interaction
-      svg.on('.zoom', null)
-    } else {
-      svg.call(zoomBehavior)
+      // Disable mouse/touch interaction but keep programmatic zoom working
+      svg.on('mousedown.zoom', null)
+        .on('touchstart.zoom', null)
+        .on('dblclick.zoom', null)
+        .on('wheel.zoom', null)
     }
 
     return () => {

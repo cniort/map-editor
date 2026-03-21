@@ -98,6 +98,8 @@ function CanvasProperties() {
   const setBackgroundColor = useMapStore((s) => s.setBackgroundColor)
   const setProjection = useMapStore((s) => s.setProjection)
   const projectName = useProjectStore((s) => s.projectName)
+  const showFormatOverlay = useUiStore((s) => s.showFormatOverlay)
+  const toggleFormatOverlay = useUiStore((s) => s.toggleFormatOverlay)
   const setProjectName = useProjectStore((s) => s.setProjectName)
   const [dpi, setDpi] = useState(300)
   const [transparentBg, setTransparentBg] = useState(false)
@@ -126,14 +128,15 @@ function CanvasProperties() {
         </div>
         <div className="grid grid-cols-3 gap-1">
           {[{ l: 'A4', w: 210, h: 297 }, { l: 'A3', w: 297, h: 420 }, { l: 'DL', w: 100, h: 210 }].map((p) => {
-            const isActive = canvas.widthMm === p.w && canvas.heightMm === p.h
+            const isMatch = canvas.widthMm === p.w && canvas.heightMm === p.h
+            const isHighlighted = isMatch && showFormatOverlay
             return (
-              <Button key={p.l} variant={isActive ? 'default' : 'outline'} size="sm" className="h-6 text-[11px]" onClick={() => {
-                if (isActive) {
-                  useUiStore.getState().toggleFormatOverlay()
+              <Button key={p.l} variant={isHighlighted ? 'default' : 'outline'} size="sm" className="h-6 text-[11px]" onClick={() => {
+                if (isMatch) {
+                  toggleFormatOverlay()
                 } else {
                   setCanvasSize(p.w, p.h)
-                  if (!useUiStore.getState().showFormatOverlay) useUiStore.getState().toggleFormatOverlay()
+                  if (!showFormatOverlay) toggleFormatOverlay()
                 }
               }}>
                 {p.l}

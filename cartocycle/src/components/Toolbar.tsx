@@ -10,6 +10,7 @@ import { SimpleSelect } from '@/components/controls/SimpleSelect'
 import {
   ZoomIn,
   ZoomOut,
+  LocateFixed,
   Maximize2,
   Minimize2,
   Lock,
@@ -85,7 +86,7 @@ export function Toolbar({ fullscreen, onToggleFullscreen }: { fullscreen: boolea
         <div className="flex items-center gap-0.5">
           <ToolbarButton icon={ZoomIn} label="Zoom avant" onClick={zoomIn} />
           <ToolbarButton icon={ZoomOut} label="Zoom arrière" onClick={zoomOut} />
-          <ToolbarButton icon={Maximize2} label="Réinitialiser la vue" onClick={zoomReset} />
+          <ToolbarButton icon={LocateFixed} label="Réinitialiser la vue" onClick={zoomReset} />
         </div>
 
         <Separator orientation="vertical" className="mx-1.5 h-5" />
