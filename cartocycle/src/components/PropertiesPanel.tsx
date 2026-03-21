@@ -509,7 +509,7 @@ function CityCategoryProperties({ categoryId }: { categoryId: string }) {
         <SectionTitle>Fond du label</SectionTitle>
         <div className="flex items-center justify-between">
           <Label className="text-xs">Activer le fond</Label>
-          <Switch checked={!!(cat.labelStyle.backgroundColor && (cat.labelStyle.backgroundOpacity ?? 0) > 0)} onCheckedChange={(checked) => updateCityCategory(categoryId, { labelStyle: { ...cat.labelStyle, backgroundOpacity: checked ? 0.8 : 0 } })} />
+          <Switch checked={(cat.labelStyle.backgroundOpacity ?? 0) > 0} onCheckedChange={(checked) => updateCityCategory(categoryId, { labelStyle: { ...cat.labelStyle, backgroundColor: cat.labelStyle.backgroundColor || '#FFFFFF', backgroundOpacity: checked ? 0.8 : 0 } })} />
         </div>
         {(cat.labelStyle.backgroundOpacity ?? 0) > 0 && (
           <>
