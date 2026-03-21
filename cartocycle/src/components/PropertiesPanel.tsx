@@ -1,5 +1,6 @@
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -13,9 +14,24 @@ import { exportSvg, exportPng } from '@/utils/export'
 import type { RouteStyle, MarkerShape, CityConfig, CityCategory, TextAnnotation, ProjectionType, LabelAnchorPosition } from '@/types'
 import { LABEL_POSITIONS } from '@/utils/labelPosition'
 import { Settings2, Search, Download, Save, FileUp } from 'lucide-react'
+import { SimpleSelect } from '@/components/controls/SimpleSelect'
 import { BUILT_IN_PRESETS, getCustomPresets } from '@/utils/presets'
 import { useUiStore } from '@/stores/uiStore'
 import { useState, useRef, useCallback } from 'react'
+
+const FONT_OPTIONS = [
+  { value: 'Gotham', label: 'Gotham' },
+  { value: 'Gotham Narrow', label: 'Gotham Narrow' },
+  { value: 'Gotham Condensed', label: 'Gotham Condensed' },
+  { value: 'system-ui, sans-serif', label: 'System' },
+]
+
+const WEIGHT_OPTIONS = [
+  { value: '300', label: 'Light' },
+  { value: '400', label: 'Book' },
+  { value: '500', label: 'Medium' },
+  { value: '700', label: 'Bold' },
+]
 
 const DASH_PRESETS = [
   { label: 'Continu', value: '' },
@@ -136,12 +152,12 @@ function CanvasProperties() {
       <Separator />
 
       <PropertyGroup title="Projection">
-        <select value={canvas.projection.type} onChange={(e) => setProjection({ type: e.target.value as ProjectionType })} className="h-7 w-full rounded-md border border-input bg-background px-2 text-xs">
-          <option value="mercator">Mercator</option>
-          <option value="lambertConformalConic">Lambert</option>
-          <option value="equirectangular">Équirectangulaire</option>
-          <option value="conicEqualArea">Conique</option>
-        </select>
+        <SimpleSelect value={canvas.projection.type} onChange={(v) => setProjection({ type: v as ProjectionType })} options={[
+          { value: 'mercator', label: 'Mercator' },
+          { value: 'lambertConformalConic', label: 'Lambert' },
+          { value: 'equirectangular', label: 'Équirectangulaire' },
+          { value: 'conicEqualArea', label: 'Conique' },
+        ]} />
       </PropertyGroup>
 
       <Separator />
@@ -153,18 +169,18 @@ function CanvasProperties() {
         <div className="space-y-2 rounded border border-border p-2">
           <div className="flex items-center gap-2">
             <Label className="w-20 shrink-0 text-xs">Résolution</Label>
-            <select value={dpi} onChange={(e) => setDpi(parseInt(e.target.value))} className="h-7 flex-1 rounded-md border border-input bg-background px-2 text-xs">
-              <option value="72">72 dpi</option>
-              <option value="150">150 dpi</option>
-              <option value="300">300 dpi</option>
-              <option value="600">600 dpi</option>
-            </select>
+            <SimpleSelect value={String(dpi)} onChange={(v) => setDpi(parseInt(v))} options={[
+          { value: '72', label: '72 dpi' },
+          { value: '150', label: '150 dpi' },
+          { value: '300', label: '300 dpi' },
+          { value: '600', label: '600 dpi' },
+        ]} />
           </div>
           <p className="text-[11px] text-muted-foreground">{pxWidth.toLocaleString()} x {pxHeight.toLocaleString()} px</p>
-          <label className="flex items-center gap-2 text-xs">
-            <input type="checkbox" checked={transparentBg} onChange={(e) => setTransparentBg(e.target.checked)} className="rounded" />
-            Fond transparent
-          </label>
+          <div className="flex items-center justify-between">
+            <Label className="text-xs">Fond transparent</Label>
+            <Switch checked={transparentBg} onCheckedChange={setTransparentBg} />
+          </div>
           <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => exportPng(projectName, canvas, dpi, transparentBg)}>
             <Download className="h-3.5 w-3.5" /> Exporter en PNG
           </Button>
@@ -296,25 +312,25 @@ function RouteProperties({ routeId }: { routeId: string }) {
         <SliderControl label="Opacité" value={Math.round(route.style.strokeOpacity * 100)} min={0} max={100} step={1} onChange={(v) => updateRouteStyle(routeId, { strokeOpacity: v / 100 })} suffix="%" />
         <div className="flex items-center gap-2">
           <Label className="w-20 shrink-0 text-xs">Style</Label>
-          <select value={route.style.strokeDasharray || ''} onChange={(e) => updateRouteStyle(routeId, { strokeDasharray: e.target.value || undefined })} className="h-7 flex-1 rounded-md border border-input bg-background px-2 text-xs">
-            {DASH_PRESETS.map((p) => <option key={p.label} value={p.value}>{p.label}</option>)}
-          </select>
+          <SimpleSelect label="Style" value={route.style.strokeDasharray || ''} onChange={(v) => updateRouteStyle(routeId, { strokeDasharray: v || undefined })} options={DASH_PRESETS.map((p) => ({ value: p.value, label: p.label }))} />
         </div>
         <div className="flex items-center gap-2">
           <Label className="w-20 shrink-0 text-xs">Extrémités</Label>
-          <select value={route.style.strokeLinecap} onChange={(e) => updateRouteStyle(routeId, { strokeLinecap: e.target.value as RouteStyle['strokeLinecap'] })} className="h-7 flex-1 rounded-md border border-input bg-background px-2 text-xs">
-            <option value="round">round</option><option value="square">square</option><option value="butt">butt</option>
-          </select>
+          <SimpleSelect label="Extrémités" value={route.style.strokeLinecap} onChange={(v) => updateRouteStyle(routeId, { strokeLinecap: v as RouteStyle['strokeLinecap'] })} options={[
+            { value: 'round', label: 'Round' },
+            { value: 'square', label: 'Square' },
+            { value: 'butt', label: 'Butt' },
+          ]} />
         </div>
       </PropertyGroup>
 
       <Separator />
 
       <PropertyGroup title="Ombre">
-        <label className="flex items-center gap-2 text-xs">
-          <input type="checkbox" checked={route.style.shadow?.enabled ?? false} onChange={(e) => updateRouteStyle(routeId, { shadow: { enabled: e.target.checked, offsetX: route.style.shadow?.offsetX ?? 2, offsetY: route.style.shadow?.offsetY ?? 2, blur: route.style.shadow?.blur ?? 4, color: route.style.shadow?.color ?? '#000000', opacity: route.style.shadow?.opacity ?? 0.3 } })} className="rounded" />
-          Ombre portée
-        </label>
+        <div className="flex items-center justify-between">
+          <Label className="text-xs">Ombre portée</Label>
+          <Switch checked={route.style.shadow?.enabled ?? false} onCheckedChange={(checked) => updateRouteStyle(routeId, { shadow: { enabled: checked, offsetX: route.style.shadow?.offsetX ?? 2, offsetY: route.style.shadow?.offsetY ?? 2, blur: route.style.shadow?.blur ?? 4, color: route.style.shadow?.color ?? '#000000', opacity: route.style.shadow?.opacity ?? 0.3 } })} />
+        </div>
         {route.style.shadow?.enabled && (
           <div className="space-y-1.5">
             <SliderControl label="Flou" value={route.style.shadow.blur} min={0} max={20} step={1} onChange={(v) => updateRouteStyle(routeId, { shadow: { ...route.style.shadow!, blur: v } })} suffix="px" />
@@ -352,9 +368,7 @@ function CityProperties({ cityId }: { cityId: string }) {
       <Separator />
 
       <PropertyGroup title="Catégorie">
-        <select value={city.categoryId} onChange={(e) => updateCity(cityId, { categoryId: e.target.value })} className="h-7 w-full rounded-md border border-input bg-background px-2 text-xs">
-          {cityCategories.map((cat) => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
-        </select>
+        <SimpleSelect value={city.categoryId} onChange={(v) => updateCity(cityId, { categoryId: v })} options={cityCategories.map((cat) => ({ value: cat.id, label: cat.name }))} />
       </PropertyGroup>
 
       <Separator />
@@ -427,12 +441,7 @@ function CityCategoryProperties({ categoryId }: { categoryId: string }) {
       <Separator />
 
       <PropertyGroup title="Marqueur">
-        <div className="flex items-center gap-2">
-          <Label className="w-20 shrink-0 text-xs">Forme</Label>
-          <select value={cat.markerStyle.shape} onChange={(e) => updateCityCategory(categoryId, { markerStyle: { ...cat.markerStyle, shape: e.target.value as MarkerShape } })} className="h-7 flex-1 rounded-md border border-input bg-background px-2 text-xs">
-            {SHAPES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
-          </select>
-        </div>
+        <SimpleSelect label="Forme" value={cat.markerStyle.shape} onChange={(v) => updateCityCategory(categoryId, { markerStyle: { ...cat.markerStyle, shape: v as MarkerShape } })} options={SHAPES.map((s) => ({ value: s.value, label: s.label }))} />
         <SliderControl label="Taille" value={cat.markerStyle.size} min={1} max={15} step={0.5} onChange={(v) => updateCityCategory(categoryId, { markerStyle: { ...cat.markerStyle, size: v } })} suffix="px" />
         <ColorPicker label="Couleur" value={cat.markerStyle.fill} onChange={(c) => updateCityCategory(categoryId, { markerStyle: { ...cat.markerStyle, fill: c } })} />
         <ColorPicker label="Contour" value={cat.markerStyle.stroke} onChange={(c) => updateCityCategory(categoryId, { markerStyle: { ...cat.markerStyle, stroke: c } })} />
@@ -441,34 +450,16 @@ function CityCategoryProperties({ categoryId }: { categoryId: string }) {
       <Separator />
 
       <PropertyGroup title="Label">
-        <div className="flex items-center gap-2">
-          <Label className="w-20 shrink-0 text-xs">Police</Label>
-          <select value={cat.labelStyle.fontFamily} onChange={(e) => updateCityCategory(categoryId, { labelStyle: { ...cat.labelStyle, fontFamily: e.target.value } })} className="h-7 flex-1 rounded-md border border-input bg-background px-2 text-xs">
-            <option value="Gotham">Gotham</option>
-            <option value="Gotham Narrow">Gotham Narrow</option>
-            <option value="Gotham Condensed">Gotham Condensed</option>
-            <option value="system-ui, sans-serif">System</option>
-          </select>
-        </div>
+        <SimpleSelect label="Police" value={cat.labelStyle.fontFamily} onChange={(v) => updateCityCategory(categoryId, { labelStyle: { ...cat.labelStyle, fontFamily: v } })} options={FONT_OPTIONS} />
         <SliderControl label="Taille" value={cat.labelStyle.fontSize} min={6} max={24} step={1} onChange={(v) => updateCityCategory(categoryId, { labelStyle: { ...cat.labelStyle, fontSize: v } })} suffix="px" />
         <ColorPicker label="Couleur" value={cat.labelStyle.color} onChange={(c) => updateCityCategory(categoryId, { labelStyle: { ...cat.labelStyle, color: c } })} />
-        <div className="flex items-center gap-2">
-          <Label className="w-20 shrink-0 text-xs">Graisse</Label>
-          <select value={cat.labelStyle.fontWeight} onChange={(e) => updateCityCategory(categoryId, { labelStyle: { ...cat.labelStyle, fontWeight: parseInt(e.target.value) as 300 | 400 | 500 | 600 | 700 } })} className="h-7 flex-1 rounded-md border border-input bg-background px-2 text-xs">
-            <option value="300">Light</option><option value="400">Book</option><option value="500">Medium</option><option value="700">Bold</option>
-          </select>
-        </div>
+        <SimpleSelect label="Graisse" value={String(cat.labelStyle.fontWeight)} onChange={(v) => updateCityCategory(categoryId, { labelStyle: { ...cat.labelStyle, fontWeight: parseInt(v) as 300 | 400 | 500 | 600 | 700 } })} options={WEIGHT_OPTIONS} />
         <Separator />
         <SectionTitle>Fond du label</SectionTitle>
-        <label className="flex items-center gap-2 text-xs">
-          <input
-            type="checkbox"
-            checked={!!(cat.labelStyle.backgroundColor && (cat.labelStyle.backgroundOpacity ?? 0) > 0)}
-            onChange={(e) => updateCityCategory(categoryId, { labelStyle: { ...cat.labelStyle, backgroundOpacity: e.target.checked ? 0.8 : 0 } })}
-            className="rounded"
-          />
-          Activer le fond
-        </label>
+        <div className="flex items-center justify-between">
+          <Label className="text-xs">Activer le fond</Label>
+          <Switch checked={!!(cat.labelStyle.backgroundColor && (cat.labelStyle.backgroundOpacity ?? 0) > 0)} onCheckedChange={(checked) => updateCityCategory(categoryId, { labelStyle: { ...cat.labelStyle, backgroundOpacity: checked ? 0.8 : 0 } })} />
+        </div>
         {(cat.labelStyle.backgroundOpacity ?? 0) > 0 && (
           <>
             <ColorPicker label="Couleur" value={cat.labelStyle.backgroundColor || '#FFFFFF'} onChange={(c) => updateCityCategory(categoryId, { labelStyle: { ...cat.labelStyle, backgroundColor: c } })} />
@@ -510,20 +501,10 @@ function AnnotationProperties({ annotationId }: { annotationId: string }) {
       <Separator />
 
       <PropertyGroup title="Typographie">
-        <div className="flex items-center gap-2">
-          <Label className="w-20 shrink-0 text-xs">Police</Label>
-          <select value={ann.style.fontFamily} onChange={(e) => updateAnnotation(annotationId, { style: { ...ann.style, fontFamily: e.target.value } } as Partial<TextAnnotation>)} className="h-7 flex-1 rounded-md border border-input bg-background px-2 text-xs">
-            <option value="Gotham">Gotham</option><option value="Gotham Narrow">Gotham Narrow</option><option value="Gotham Condensed">Gotham Condensed</option><option value="system-ui, sans-serif">System</option>
-          </select>
-        </div>
+        <SimpleSelect label="Police" value={ann.style.fontFamily} onChange={(v) => updateAnnotation(annotationId, { style: { ...ann.style, fontFamily: v } } as Partial<TextAnnotation>)} options={FONT_OPTIONS} />
         <SliderControl label="Taille" value={ann.style.fontSize} min={8} max={48} step={1} onChange={(v) => updateAnnotation(annotationId, { style: { ...ann.style, fontSize: v } } as Partial<TextAnnotation>)} suffix="px" />
         <ColorPicker label="Couleur" value={ann.style.color} onChange={(c) => updateAnnotation(annotationId, { style: { ...ann.style, color: c } } as Partial<TextAnnotation>)} />
-        <div className="flex items-center gap-2">
-          <Label className="w-20 shrink-0 text-xs">Graisse</Label>
-          <select value={ann.style.fontWeight} onChange={(e) => updateAnnotation(annotationId, { style: { ...ann.style, fontWeight: parseInt(e.target.value) as 300 | 400 | 500 | 600 | 700 } } as Partial<TextAnnotation>)} className="h-7 flex-1 rounded-md border border-input bg-background px-2 text-xs">
-            <option value="300">Light</option><option value="400">Book</option><option value="500">Medium</option><option value="700">Bold</option>
-          </select>
-        </div>
+        <SimpleSelect label="Graisse" value={String(ann.style.fontWeight)} onChange={(v) => updateAnnotation(annotationId, { style: { ...ann.style, fontWeight: parseInt(v) as 300 | 400 | 500 | 600 | 700 } } as Partial<TextAnnotation>)} options={WEIGHT_OPTIONS} />
         <SliderControl label="Espacement" value={ann.style.letterSpacing} min={0} max={20} step={0.5} onChange={(v) => updateAnnotation(annotationId, { style: { ...ann.style, letterSpacing: v } } as Partial<TextAnnotation>)} suffix="px" />
         <SliderControl label="Rotation" value={ann.style.rotation} min={-180} max={180} step={1} onChange={(v) => updateAnnotation(annotationId, { style: { ...ann.style, rotation: v } } as Partial<TextAnnotation>)} suffix="°" />
       </PropertyGroup>
@@ -624,9 +605,7 @@ function AddCitySection() {
           ))}
         </div>
       )}
-      <select value={category} onChange={(e) => setCategory(e.target.value)} className="h-7 w-full rounded-md border border-input bg-background px-2 text-xs">
-        {cityCategories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-      </select>
+      <SimpleSelect value={category} onChange={setCategory} options={cityCategories.map((c) => ({ value: c.id, label: c.name }))} />
 
       <div className="flex gap-1">
         <Button variant="outline" size="sm" className="flex-1 h-7 text-xs" onClick={() => setShowManual(!showManual)}>

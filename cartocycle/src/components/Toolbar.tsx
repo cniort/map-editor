@@ -6,6 +6,7 @@ import { useProjectStore } from '@/stores/projectStore'
 import { zoomIn, zoomOut, zoomReset } from '@/components/MapCanvas'
 import { SettingsDialog } from '@/components/SettingsDialog'
 import type { ProjectionType } from '@/types'
+import { SimpleSelect } from '@/components/controls/SimpleSelect'
 import {
   ZoomIn,
   ZoomOut,
@@ -70,16 +71,12 @@ export function Toolbar({ fullscreen, onToggleFullscreen }: { fullscreen: boolea
         {/* Projection */}
         <div className="flex items-center gap-1.5">
           <Map className="h-3.5 w-3.5 text-muted-foreground" />
-          <select
-            value={canvas.projection.type}
-            onChange={(e) => setProjection({ type: e.target.value as ProjectionType })}
-            className="h-7 rounded border border-input bg-background px-2 text-xs font-medium"
-          >
-            <option value="mercator">Mercator</option>
-            <option value="lambertConformalConic">Lambert</option>
-            <option value="equirectangular">Équirectangulaire</option>
-            <option value="conicEqualArea">Conique</option>
-          </select>
+          <SimpleSelect value={canvas.projection.type} onChange={(v) => setProjection({ type: v as ProjectionType })} options={[
+            { value: 'mercator', label: 'Mercator' },
+            { value: 'lambertConformalConic', label: 'Lambert' },
+            { value: 'equirectangular', label: 'Équirect.' },
+            { value: 'conicEqualArea', label: 'Conique' },
+          ]} />
         </div>
 
         <Separator orientation="vertical" className="mx-1.5 h-5" />
