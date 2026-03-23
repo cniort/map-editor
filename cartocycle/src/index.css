@@ -5,22 +5,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Gotham Font Family */
-@font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Light.otf') format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-LightItalic.otf') format('opentype'); font-weight: 300; font-style: italic; font-display: swap; }
-@font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Book.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-BookItalic.otf') format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
-@font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-MediumItalic.otf') format('opentype'); font-weight: 500; font-style: italic; font-display: swap; }
-@font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-BoldItalic.otf') format('opentype'); font-weight: 700; font-style: italic; font-display: swap; }
-@font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Black.otf') format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Gotham Narrow'; src: url('/fonts/GothamNarrow-Book.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Gotham Narrow'; src: url('/fonts/GothamNarrow-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Gotham Narrow'; src: url('/fonts/GothamNarrow-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Gotham Condensed'; src: url('/fonts/GothamCond-Book.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Gotham Condensed'; src: url('/fonts/GothamCond-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Gotham Condensed'; src: url('/fonts/GothamCond-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+/* Inter Font Family (via Google Fonts CDN) */
 
 :root {
   --background: oklch(1 0 0);

@@ -1,21 +1,9 @@
 import type { CanvasConfig } from '@/types'
 
-function getGothamFontFaces(): string {
-  // Embed font references for SVG export
-  // In a production app, these would be base64-encoded. For now, reference the font files.
+function getInterFontStyle(): string {
   return `
     <style>
-      @font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Light.otf'); font-weight: 300; font-style: normal; }
-      @font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Book.otf'); font-weight: 400; font-style: normal; }
-      @font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Medium.otf'); font-weight: 500; font-style: normal; }
-      @font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Bold.otf'); font-weight: 700; font-style: normal; }
-      @font-face { font-family: 'Gotham'; src: url('/fonts/Gotham-Black.otf'); font-weight: 900; font-style: normal; }
-      @font-face { font-family: 'Gotham Narrow'; src: url('/fonts/GothamNarrow-Book.otf'); font-weight: 400; }
-      @font-face { font-family: 'Gotham Narrow'; src: url('/fonts/GothamNarrow-Medium.otf'); font-weight: 500; }
-      @font-face { font-family: 'Gotham Narrow'; src: url('/fonts/GothamNarrow-Bold.otf'); font-weight: 700; }
-      @font-face { font-family: 'Gotham Condensed'; src: url('/fonts/GothamCond-Book.otf'); font-weight: 400; }
-      @font-face { font-family: 'Gotham Condensed'; src: url('/fonts/GothamCond-Medium.otf'); font-weight: 500; }
-      @font-face { font-family: 'Gotham Condensed'; src: url('/fonts/GothamCond-Bold.otf'); font-weight: 700; }
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
     </style>
   `
 }
@@ -39,7 +27,7 @@ function prepareExportSvg(_canvas: CanvasConfig): SVGSVGElement | null {
 
   // Embed font declarations
   const defsEl = clone.querySelector('defs') || clone.insertBefore(document.createElementNS('http://www.w3.org/2000/svg', 'defs'), clone.firstChild)
-  defsEl.innerHTML = getGothamFontFaces() + defsEl.innerHTML
+  defsEl.innerHTML = getInterFontStyle() + defsEl.innerHTML
 
   return clone
 }

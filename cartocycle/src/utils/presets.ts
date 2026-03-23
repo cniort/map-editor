@@ -27,7 +27,7 @@ export const BUILT_IN_PRESETS: StylePreset[] = [
     routeWidth: 3,
     cityMarkerFill: '#D42A2A',
     cityLabelColor: '#333333',
-    fontFamily: 'Gotham',
+    fontFamily: 'Inter',
     smoothing: 12,
   },
   {
@@ -41,7 +41,7 @@ export const BUILT_IN_PRESETS: StylePreset[] = [
     routeWidth: 3,
     cityMarkerFill: '#2980B9',
     cityLabelColor: '#2C3E50',
-    fontFamily: 'Gotham',
+    fontFamily: 'Inter',
     smoothing: 15,
   },
   {
@@ -55,7 +55,7 @@ export const BUILT_IN_PRESETS: StylePreset[] = [
     routeWidth: 2,
     cityMarkerFill: '#333333',
     cityLabelColor: '#555555',
-    fontFamily: 'Gotham',
+    fontFamily: 'Inter',
     smoothing: 20,
   },
   {
@@ -69,7 +69,7 @@ export const BUILT_IN_PRESETS: StylePreset[] = [
     routeWidth: 3,
     cityMarkerFill: '#27AE60',
     cityLabelColor: '#2C3E2C',
-    fontFamily: 'Gotham',
+    fontFamily: 'Inter',
     smoothing: 18,
   },
 ]

@@ -146,7 +146,7 @@ const defaultState: MapState = {
       name: 'Ville principale',
       markerStyle: { shape: 'circle', size: 4, fill: '#333333', fillOpacity: 1, stroke: '#000000', strokeWidth: 1 },
       labelStyle: {
-        fontFamily: 'Gotham', fontSize: 12, fontWeight: 600, fontStyle: 'normal',
+        fontFamily: 'Inter', fontSize: 12, fontWeight: 600, fontStyle: 'normal',
         color: '#333333', letterSpacing: 0, offset: { x: 8, y: 4 },
         anchor: 'start', baseline: 'central', rotation: 0, showLeaderLine: false,
       },
@@ -156,7 +156,7 @@ const defaultState: MapState = {
       name: 'Ville étape',
       markerStyle: { shape: 'circle', size: 3, fill: '#666666', fillOpacity: 1, stroke: '#333333', strokeWidth: 0.5 },
       labelStyle: {
-        fontFamily: 'Gotham', fontSize: 10, fontWeight: 400, fontStyle: 'normal',
+        fontFamily: 'Inter', fontSize: 10, fontWeight: 400, fontStyle: 'normal',
         color: '#666666', letterSpacing: 0, offset: { x: 6, y: 3 },
         anchor: 'start', baseline: 'central', rotation: 0, showLeaderLine: false,
       },
@@ -168,7 +168,7 @@ const defaultState: MapState = {
     style: {
       backgroundColor: '#FFFFFF', backgroundOpacity: 0.9, borderColor: '#CCCCCC',
       borderWidth: 1, borderRadius: 4, padding: 12,
-      fontFamily: 'Gotham', fontSize: 11, fontColor: '#333333',
+      fontFamily: 'Inter', fontSize: 11, fontColor: '#333333',
       titleFontSize: 14, titleFontWeight: 700,
     },
     title: 'Légende', items: [],

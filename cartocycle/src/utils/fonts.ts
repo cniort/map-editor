@@ -1,7 +1,5 @@
 export const FONT_FAMILIES = [
-  { value: 'Gotham', label: 'Gotham' },
-  { value: 'Gotham Narrow', label: 'Gotham Narrow' },
-  { value: 'Gotham Condensed', label: 'Gotham Condensed' },
+  { value: 'Inter', label: 'Inter' },
   { value: 'system-ui, sans-serif', label: 'System' },
   { value: 'Georgia, serif', label: 'Georgia' },
   { value: 'monospace', label: 'Monospace' },

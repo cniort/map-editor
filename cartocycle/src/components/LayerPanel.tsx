@@ -246,7 +246,7 @@ export function LayerPanel() {
       type: 'text', id: crypto.randomUUID(), content: 'Nouveau texte',
       position: { x: 100, y: 100 },
       style: {
-        fontFamily: 'Gotham', fontSize: 16, fontWeight: 400, fontStyle: 'normal',
+        fontFamily: 'Inter', fontSize: 16, fontWeight: 400, fontStyle: 'normal',
         color: '#333333', letterSpacing: 0, offset: { x: 0, y: 0 },
         anchor: 'start', baseline: 'auto', rotation: 0, showLeaderLine: false,
       },

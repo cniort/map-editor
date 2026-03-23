@@ -272,9 +272,7 @@ export function CitiesPanel() {
                       onChange={(e) => updateCityCategory(cat.id, { labelStyle: { ...cat.labelStyle, fontFamily: e.target.value } })}
                       className="h-7 flex-1 rounded-md border border-input bg-background px-2 text-xs"
                     >
-                      <option value="Gotham">Gotham</option>
-                      <option value="Gotham Narrow">Gotham Narrow</option>
-                      <option value="Gotham Condensed">Gotham Condensed</option>
+                      <option value="Inter">Inter</option>
                       <option value="system-ui, sans-serif">System</option>
                     </select>
                   </div>

@@ -29,7 +29,7 @@ export function AnnotationsPanel() {
       content: newText.trim(),
       position: { x: 100, y: 100 },
       style: {
-        fontFamily: 'Gotham',
+        fontFamily: 'Inter',
         fontSize: 16,
         fontWeight: 400,
         fontStyle: 'normal',

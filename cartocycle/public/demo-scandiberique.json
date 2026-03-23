@@ -93,7 +93,7 @@
         "strokeWidth": 0.5
       },
       "labelStyle": {
-        "fontFamily": "Gotham",
+        "fontFamily": "Inter",
         "fontSize": 8,
         "fontWeight": 400,
         "fontStyle": "normal",
@@ -119,7 +119,7 @@
         "strokeWidth": 0.5
       },
       "labelStyle": {
-        "fontFamily": "Gotham",
+        "fontFamily": "Inter",
         "fontSize": 10,
         "fontWeight": 700,
         "fontStyle": "normal",
@@ -138,49 +138,49 @@
     {
       "type": "text", "id": "ann-france", "content": "FRANCE",
       "position": { "x": 0, "y": 0 }, "geoCoordinates": [2.5, 46.5],
-      "style": { "fontFamily": "Gotham", "fontSize": 10, "fontWeight": 500, "fontStyle": "normal", "color": "#E8E8E8", "letterSpacing": 5, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "style": { "fontFamily": "Inter", "fontSize": 10, "fontWeight": 500, "fontStyle": "normal", "color": "#E8E8E8", "letterSpacing": 5, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
       "zIndex": 100
     },
     {
       "type": "text", "id": "ann-norvege", "content": "NORVÈGE",
       "position": { "x": 0, "y": 0 }, "geoCoordinates": [8, 62],
-      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "style": { "fontFamily": "Inter", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
       "zIndex": 100
     },
     {
       "type": "text", "id": "ann-suede", "content": "SUÈDE",
       "position": { "x": 0, "y": 0 }, "geoCoordinates": [15, 60],
-      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "style": { "fontFamily": "Inter", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
       "zIndex": 100
     },
     {
       "type": "text", "id": "ann-danemark", "content": "DANEMARK",
       "position": { "x": 0, "y": 0 }, "geoCoordinates": [10, 56],
-      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "style": { "fontFamily": "Inter", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
       "zIndex": 100
     },
     {
       "type": "text", "id": "ann-allemagne", "content": "ALLEMAGNE",
       "position": { "x": 0, "y": 0 }, "geoCoordinates": [10, 51],
-      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "style": { "fontFamily": "Inter", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
       "zIndex": 100
     },
     {
       "type": "text", "id": "ann-paysbas", "content": "PAYS-BAS",
       "position": { "x": 0, "y": 0 }, "geoCoordinates": [5.5, 52.3],
-      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "style": { "fontFamily": "Inter", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
       "zIndex": 100
     },
     {
       "type": "text", "id": "ann-belgique", "content": "BELGIQUE",
       "position": { "x": 0, "y": 0 }, "geoCoordinates": [4.5, 50.8],
-      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "style": { "fontFamily": "Inter", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "start", "baseline": "central", "rotation": 0, "showLeaderLine": false },
       "zIndex": 100
     },
     {
       "type": "text", "id": "ann-espagne", "content": "ESPAGNE",
       "position": { "x": 0, "y": 0 }, "geoCoordinates": [-4, 40],
-      "style": { "fontFamily": "Gotham", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
+      "style": { "fontFamily": "Inter", "fontSize": 8, "fontWeight": 400, "fontStyle": "normal", "color": "#AAAAAA", "letterSpacing": 2, "offset": { "x": 0, "y": 0 }, "anchor": "middle", "baseline": "central", "rotation": 0, "showLeaderLine": false },
       "zIndex": 100
     }
   ],
@@ -191,7 +191,7 @@
     "style": {
       "backgroundColor": "#FFFFFF", "backgroundOpacity": 0.9, "borderColor": "#CCCCCC",
       "borderWidth": 1, "borderRadius": 4, "padding": 12,
-      "fontFamily": "Gotham", "fontSize": 11, "fontColor": "#333333",
+      "fontFamily": "Inter", "fontSize": 11, "fontColor": "#333333",
       "titleFontSize": 14, "titleFontWeight": 700
     },
     "title": "Légende", "items": []

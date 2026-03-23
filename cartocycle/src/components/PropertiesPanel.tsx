@@ -20,9 +20,7 @@ import { useUiStore } from '@/stores/uiStore'
 import { useState, useRef, useCallback } from 'react'
 
 const FONT_OPTIONS = [
-  { value: 'Gotham', label: 'Gotham' },
-  { value: 'Gotham Narrow', label: 'Gotham Narrow' },
-  { value: 'Gotham Condensed', label: 'Gotham Condensed' },
+  { value: 'Inter', label: 'Inter' },
   { value: 'system-ui, sans-serif', label: 'System' },
 ]
 
@@ -472,7 +470,7 @@ function CityCategoryProperties({ categoryId }: { categoryId: string }) {
     const newCat: CityCategory = {
       id: crypto.randomUUID(), name: 'Nouvelle catégorie',
       markerStyle: { shape: 'circle', size: 3, fill: '#666666', fillOpacity: 1, stroke: '#333333', strokeWidth: 0.5 },
-      labelStyle: { fontFamily: 'Gotham', fontSize: 10, fontWeight: 400, fontStyle: 'normal', color: '#333333', letterSpacing: 0, offset: { x: 6, y: 3 }, anchor: 'start', baseline: 'central', rotation: 0, showLeaderLine: false },
+      labelStyle: { fontFamily: 'Inter', fontSize: 10, fontWeight: 400, fontStyle: 'normal', color: '#333333', letterSpacing: 0, offset: { x: 6, y: 3 }, anchor: 'start', baseline: 'central', rotation: 0, showLeaderLine: false },
     }
     addCityCategory(newCat)
     select(newCat.id, 'cityCategory')
