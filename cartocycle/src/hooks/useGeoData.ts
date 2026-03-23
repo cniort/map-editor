@@ -10,11 +10,13 @@ interface GeoDataSet {
   regions: FeatureCollection | null
 }
 
+const base = import.meta.env.BASE_URL
+
 const DATA_URLS = {
-  countries: '/data/countries.topojson',
-  coastline: '/data/coastline.topojson',
-  rivers: '/data/rivers.topojson',
-  regions: '/data/regions_fr.topojson',
+  countries: `${base}data/countries.topojson`,
+  coastline: `${base}data/coastline.topojson`,
+  rivers: `${base}data/rivers.topojson`,
+  regions: `${base}data/regions_fr.topojson`,
 } as const
 
 type LayerKey = keyof typeof DATA_URLS
