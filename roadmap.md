@@ -22,7 +22,7 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 
 ## Phase 3 — Polish [TERMINEE]
 
-> Fonts Gotham (15 fichiers OTF intégrés), ombres portées SVG, raccourcis clavier (Ctrl+Z/S/E), sauvegarde auto localStorage, refonte UI icônes Lucide.
+> Fonts intégrées (Inter via Google Fonts CDN), ombres portées SVG, raccourcis clavier (Ctrl+Z/S/E), sauvegarde auto localStorage, refonte UI icônes Lucide.
 
 ---
 
@@ -162,7 +162,7 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 - [x] Chaque ville = groupe avec marqueur + label (déplaçable dans Illustrator)
 - [x] Chaque itinéraire nommé (id="itineraire-la-scandiberique")
 - [x] Annotations nommées (id="annotation-france")
-- [x] Polices Gotham embarquées via @font-face
+- [x] Polices Inter embarquées via Google Fonts CDN (Gotham retiré pour raisons de licence)
 
 ---
 
@@ -176,8 +176,8 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 
 ### 6.2 Polices embarquées dans le SVG
 
-- [ ] @font-face Gotham intégré dans le SVG exporté
-- [ ] Ou conversion textes en chemins vectoriels (outlines)
+- [x] Police Inter intégrée dans le SVG exporté (via @import Google Fonts)
+- [ ] Conversion textes en chemins vectoriels (outlines)
 
 ---
 
@@ -186,7 +186,7 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 ### 7.1 Presets de style / looks de carte
 
 - [ ] Sauvegarder un "look" complet : palette de couleurs + épaisseurs + typographie + lissage
-- [ ] Presets intégrés : "Scandibérique" (rouge, Gotham Bold, France gris foncé), "Vélodyssée" (bleu, style côtier), "Neutre" (gris, minimaliste)
+- [ ] Presets intégrés : "Scandibérique" (rouge, Inter Bold, France gris foncé), "Vélodyssée" (bleu, style côtier), "Neutre" (gris, minimaliste)
 - [ ] Appliquer un preset en un clic pour changer tout le style de la carte
 - [ ] Créer et sauvegarder ses propres presets
 - [ ] Accélérer la production en série (même itinéraire, plusieurs styles)
@@ -217,6 +217,17 @@ CartoCycle est une application web locale permettant de générer des cartes d'i
 - [ ] La distance au point reste la même (définie par l'offset de la catégorie), seul l'angle change
 - [ ] Interface : clic sur le label ou sur un sélecteur de position (8 boutons en cercle) dans les propriétés de la ville
 - [ ] Override individuel par ville, sans modifier la catégorie
+
+---
+
+## Déploiement GitHub Pages [TERMINE]
+
+- [x] Repo public GitHub : cniort/map-editor
+- [x] Déploiement automatique via GitHub Actions (workflow deploy.yml)
+- [x] Base path Vite configuré pour /map-editor/
+- [x] Chemins des données TopoJSON corrigés (import.meta.env.BASE_URL)
+- [x] Polices Gotham retirées du repo (licence propriétaire) → remplacées par Inter (Google Fonts)
+- [x] URL publique : https://cniort.github.io/map-editor/
 
 ---
 
