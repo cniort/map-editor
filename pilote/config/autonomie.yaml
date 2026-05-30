@@ -1,0 +1,50 @@
+# ============================================================
+# CONFIG — deux niveaux d'autonomie + garde-fous (validation gates)
+# ============================================================
+# Le chef-de-projet consulte ce fichier pour savoir, à chaque action,
+# s'il peut agir seul ou s'il doit s'arrêter et te solliciter.
+
+modes:
+  "1":
+    nom: "Copilote encadré"
+    resume: >
+      Autonome sur l'exécution de tâches déjà cadrées. Produit un plan validable
+      avant d'engager une direction. S'arrête aux jalons.
+    produit_un_plan_avant_execution: true
+    ouvre_des_pr: true
+    merge: false
+    boucle_meta_cognitive: false
+
+  "2":
+    nom: "Pilote autonome"
+    resume: >
+      Prend l'initiative selon la vision : décompose, code, commit, ouvre des PR,
+      s'auto-évalue via l'agent critique, et ne sollicite que pour les décisions
+      stratégiques.
+    produit_un_plan_avant_execution: false
+    ouvre_des_pr: true
+    merge: false
+    boucle_meta_cognitive: true   # déclenche critique-projet après chaque lot
+
+# ------------------------------------------------------------
+# GARDE-FOUS : actions sensibles et niveau d'autorisation par mode.
+#   auto     = l'agent agit seul
+#   valider  = l'agent s'arrête et te demande avant d'agir
+#   interdit = l'agent ne le fait jamais seul, quel que soit le mode
+# ------------------------------------------------------------
+garde_fous:
+  bugfix_local:                { mode_1: auto,     mode_2: auto }
+  tests_et_doc:                { mode_1: auto,     mode_2: auto }
+  ouvrir_pr:                   { mode_1: auto,     mode_2: auto }
+  refactor_majeur:             { mode_1: valider,  mode_2: auto }
+  demarrer_nouvelle_feature:   { mode_1: valider,  mode_2: auto }
+  choix_architecture_majeur:   { mode_1: valider,  mode_2: valider }
+  priorisation_inter_projets:  { mode_1: valider,  mode_2: valider }
+  changement_identite_produit: { mode_1: valider,  mode_2: valider }
+  depense_ou_api_payante:      { mode_1: interdit, mode_2: valider }
+  merge_pr:                    { mode_1: interdit, mode_2: interdit }
+  deploiement_prod:            { mode_1: interdit, mode_2: interdit }
+  suppression_donnees:         { mode_1: interdit, mode_2: interdit }
+
+# Règle d'or : en cas de doute ou d'ambiguïté, escalader plutôt qu'agir.
+escalade_par_defaut: valider

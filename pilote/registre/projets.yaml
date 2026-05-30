@@ -1,0 +1,52 @@
+# ============================================================
+# REGISTRE CENTRAL DES PROJETS — la mémoire durable du Pilote
+# ============================================================
+# C'est LE fichier que le chef-de-projet lit en premier à chaque réveil.
+# Tiens-le à jour : sans ça, l'agent perd le contexte entre les sessions.
+#
+# statut         : actif | dormant | en_pause | idee | archive
+# priorite       : P0 (critique) | P1 | P2 | P3 (un jour)
+# mode_autonomie : 1 (copilote encadré) | 2 (pilote autonome)
+# Voir config/autonomie.yaml pour la signification des modes et garde-fous.
+
+meta:
+  version: 1
+  derniere_revue: 2026-05-30
+  super_manager: Corentin
+
+projets:
+  - id: cartocycle
+    nom: CartoCycle
+    repo: cniort/map-editor
+    statut: actif
+    priorite: P1
+    mode_autonomie: 1
+    vision: >
+      Éditeur de cartes vectorielles (SVG/PNG) pour la production print
+      d'itinéraires cyclables. L'utilisateur garde le contrôle total sur
+      chaque élément graphique.
+    strategie_actuelle: >
+      Stabiliser l'éditeur (zoom/pan, recherche de villes accessible) avant
+      d'enrichir, puis fiabiliser l'export fidèle.
+    prochaine_action: "Corriger le bug zoom/pan qui se désactive après import GPX/projet"
+    deadline: null
+    derniere_activite: 2026-05-30
+    garde_fous_override: {}   # surcharge éventuelle de config/autonomie.yaml
+    tags: [react, d3, print, velo]
+
+  # ---------------------------------------------------------
+  # GABARIT — duplique ce bloc pour chaque nouveau projet
+  # ---------------------------------------------------------
+  - id: exemple-projet
+    nom: "Nom du projet"
+    repo: "org/repo"
+    statut: idee
+    priorite: P3
+    mode_autonomie: 1
+    vision: "Ce que le projet doit devenir, en une phrase."
+    strategie_actuelle: "L'orientation du moment."
+    prochaine_action: "La prochaine étape concrète, actionnable."
+    deadline: null
+    derniere_activite: null
+    garde_fous_override: {}
+    tags: []
