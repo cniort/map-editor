@@ -68,7 +68,12 @@ et on **priorise**. Détails coûts → `02-couts-et-alternatives.md`.
 
 Chaque Routine de projet suit **le même protocole** (l'agent `chef-de-projet`) :
 avance en autonomie, ouvre une PR, **n'interrompt pas**, et **empile ses décisions
-dans le hub** (`validations.md`). Toi, tu videos la file quand tu veux via `/valider`.
+dans le hub** (`validations.md`). Toi, tu vides la file quand tu veux via `/valider`.
+
+> **Astuce clé** : une Routine peut inclure **plusieurs repos** à la fois. Mets-y le
+> repo du projet **et** le hub : dans la même session, l'agent lit le registre, travaille
+> sur le projet, ouvre la PR, et écrit ses décisions dans `validations.md` du hub.
+> Pas besoin de plomberie pour relier les deux.
 
 ---
 
