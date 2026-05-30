@@ -79,8 +79,25 @@ Même cerveau, deux portes d'entrée. Ce qui les sépare est **paramétré** dan
 ## 4. Garde-fous (validation gates)
 
 Définis dans `config/autonomie.yaml`. Chaque action sensible vaut
-`auto` (agit seul) / `valider` (stop + demande) / `interdit`, **par mode**.
-Règle d'or : **en cas de doute, escalader plutôt qu'agir**.
+`auto` (agit seul) / `valider` (mise en file) / `interdit`, **par mode**.
+Règle d'or : **en cas de doute, mettre en file plutôt qu'agir**.
+
+---
+
+## 4 bis. Validation par lots — le cœur du dispositif
+
+Tu pilotes 30-40 projets : être sollicité tâche par tâche te ruinerait. Le Pilote
+fonctionne donc **sans interruption** :
+
+1. Il avance en autonomie sur tout ce qu'il peut (`auto`).
+2. Dès qu'il rencontre une vraie décision (`valider`), il **ne s'arrête pas** :
+   il la consigne dans `validations.md` et **continue ailleurs**.
+3. Au bon moment, tu lances `/valider` : tu tranches **tout le lot en une session**,
+   dans un format digeste (contexte court + options).
+4. Tes choix sont enregistrés, et l'agent **reprend entièrement la main**.
+
+> C'est ce qui te sort des « 6 fenêtres VS Code » : tu ne suis plus chaque
+> implémentation, tu arbitres un backlog de décisions groupées, quand tu le décides.
 
 ---
 
@@ -93,6 +110,7 @@ pilote/
 │   └── projets.yaml           ← la mémoire : tous tes projets
 ├── config/
 │   └── autonomie.yaml         ← 2 modes + garde-fous
+├── validations.md             ← file des décisions qui t'attendent (validation par lots)
 ├── templates/
 │   └── rapport.md             ← gabarit de rapport
 └── journal/
@@ -123,6 +141,7 @@ Dans une session Claude Code à la racine du repo :
 | `/next` | Propose la prochaine action la plus utile (priorisation) |
 | `/plan <projet>` | Produit un plan validable (niveau 1) |
 | `/avance <projet>` | Lance le chef-de-projet sur un projet |
+| `/valider` | Traite **en un lot** toutes les décisions en attente, puis débloque l'agent |
 
 **Première étape concrète** : remplir `registre/projets.yaml` avec tes vrais
 projets (l'entrée `cartocycle` sert d'exemple).
