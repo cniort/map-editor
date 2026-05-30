@@ -111,6 +111,7 @@ pilote/
 ├── config/
 │   └── autonomie.yaml         ← 2 modes + garde-fous
 ├── validations.md             ← file des décisions qui t'attendent (validation par lots)
+├── docs/                      ← kit de passage à l'échelle (hub, Routines, coûts)
 ├── templates/
 │   └── rapport.md             ← gabarit de rapport
 └── journal/
